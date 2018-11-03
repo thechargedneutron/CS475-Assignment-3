@@ -1,6 +1,6 @@
 #include "gl_framework.hpp"
 
-extern GLfloat xrot,yrot,zrot,c_xrot,c_yrot,c_zrot;
+extern GLfloat xrot,yrot,zrot,c_xrot,c_yrot,c_zrot,c_xpos,c_ypos,c_zpos;
 extern bool enable_perspective;
 
 namespace csX75
@@ -60,7 +60,19 @@ namespace csX75
     else if (key == GLFW_KEY_Q  )
       c_zrot -= 1.0;
     else if (key == GLFW_KEY_E  )
-      c_zrot += 1.0;   
+      c_zrot += 0.5;   
+    else if (key == GLFW_KEY_J  )
+      c_ypos -= 0.5;
+    else if (key == GLFW_KEY_L  )
+      c_ypos += 0.5;
+    else if (key == GLFW_KEY_I  )
+      c_xpos -= 0.5;
+    else if (key == GLFW_KEY_K  )
+      c_xpos += 0.5;        
+    else if (key == GLFW_KEY_U  )
+      c_zpos -= 0.5;
+    else if (key == GLFW_KEY_O  )
+      c_zpos += 0.5; 
   }
 };  
   
