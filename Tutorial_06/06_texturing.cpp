@@ -14,7 +14,7 @@
 #include "texture.hpp"
 
 GLuint shaderProgram;
-GLuint vbo[2], vao[2];
+GLuint vbo[3], vao[3];
 GLuint tex;
 
 glm::mat4 rotation_matrix;
@@ -34,32 +34,60 @@ GLuint viewMatrix;
 GLuint normalMatrix;
 //-----------------------------------------------------------------
 
+int number_of_vao = 3;
+
 //6 faces, 2 triangles/face, 3 vertices/triangle
 const int num_vertices = 36;
 
 glm::vec4 texCoordinates[8];
 //Eight vertices in homogenous coordinates
+
+float s = 5.0;
+
 glm::vec4 positions1[8] = {
-  glm::vec4(-0.5, -0.5, 0.5, 1.0),
-  glm::vec4(-0.5, 0.5, 0.5, 1.0),
-  glm::vec4(0.5, 0.5, 0.5, 1.0),
-  glm::vec4(0.5, -0.5, 0.5, 1.0),
-  glm::vec4(-0.5, -0.5, -0.5, 1.0),
-  glm::vec4(-0.5, 0.5, -0.5, 1.0),
-  glm::vec4(0.5, 0.5, -0.5, 1.0),
-  glm::vec4(0.5, -0.5, -0.5, 1.0)
+  glm::vec4(-2*s, -s+2*s, 1.5*s, 1.0),
+  glm::vec4(-2*s, s+2*s, 1.5*s, 1.0),
+  glm::vec4(2*s, s+2*s, 1.5*s, 1.0),
+  glm::vec4(2*s, -s+2*s, 1.5*s, 1.0),
+  glm::vec4(-2*s, -s+2*s, -1.5*s, 1.0),
+  glm::vec4(-2*s, s+2*s, -1.5*s, 1.0),
+  glm::vec4(2*s, s+2*s, -1.5*s, 1.0),
+  glm::vec4(2*s, -s+2*s, -1.5*s, 1.0),
 };
 
 glm::vec4 positions[8] = {
-  glm::vec4(-0.5, -0.5+1.0, 0.5, 1.0),
-  glm::vec4(-0.5, 0.5+1.0, 0.5, 1.0),
-  glm::vec4(0.5, 0.5+1.0, 0.5, 1.0),
-  glm::vec4(0.5, -0.5+1.0, 0.5, 1.0),
-  glm::vec4(-0.5, -0.5+1.0, -0.5, 1.0),
-  glm::vec4(-0.5, 0.5+1.0, -0.5, 1.0),
-  glm::vec4(0.5, 0.5+1.0, -0.5, 1.0),
-  glm::vec4(0.5, -0.5+1.0, -0.5, 1.0)
+  glm::vec4(-2*s, -s-2*s, 1.5*s, 1.0),
+  glm::vec4(-2*s, s-2*s, 1.5*s, 1.0),
+  glm::vec4(2*s, s-2*s, 1.5*s, 1.0),
+  glm::vec4(2*s, -s-2*s, 1.5*s, 1.0),
+  glm::vec4(-2*s, -s-2*s, -1.5*s, 1.0),
+  glm::vec4(-2*s, s-2*s, -1.5*s, 1.0),
+  glm::vec4(2*s, s-2*s, -1.5*s, 1.0),
+  glm::vec4(2*s, -s-2*s, -1.5*s, 1.0),
 };
+
+glm::vec4 positions2[8] = {
+  glm::vec4(-2*s+4*s, -s, 1.5*s, 1.0),
+  glm::vec4(-2*s+4*s, s, 1.5*s, 1.0),
+  glm::vec4(2*s+4*s, s, 1.5*s, 1.0),
+  glm::vec4(2*s+4*s, -s, 1.5*s, 1.0),
+  glm::vec4(-2*s+4*s, -s, -1.5*s, 1.0),
+  glm::vec4(-2*s+4*s, s, -1.5*s, 1.0),
+  glm::vec4(2*s+4*s, s, -1.5*s, 1.0),
+  glm::vec4(2*s+4*s, -s, -1.5*s, 1.0),
+};
+
+
+// glm::vec4 positions[8] = {
+//   glm::vec4(-0.5, -0.5+1.0, 0.5, 1.0),
+//   glm::vec4(-0.5, 0.5+1.0, 0.5, 1.0),
+//   glm::vec4(0.5, 0.5+1.0, 0.5, 1.0),
+//   glm::vec4(0.5, -0.5+1.0, 0.5, 1.0),
+//   glm::vec4(-0.5, -0.5+1.0, -0.5, 1.0),
+//   glm::vec4(-0.5, 0.5+1.0, -0.5, 1.0),
+//   glm::vec4(0.5, 0.5+1.0, -0.5, 1.0),
+//   glm::vec4(0.5, -0.5+1.0, -0.5, 1.0)
+// };
 
 glm::vec4 normals[8] = {
   glm::vec4(-0.5, -0.5, 0.5, 1.0),
@@ -101,33 +129,34 @@ glm::vec4 blue(0.2, 0.2, 0.7, 1.0);
 int tri_idx=0;
 glm::vec4 v_positions[num_vertices];
 glm::vec4 v_positions1[num_vertices];
+glm::vec4 v_positions2[num_vertices];
 glm::vec4 v_colors[num_vertices];
 glm::vec4 v_normals[num_vertices];
 glm::vec2 tex_coords[num_vertices];
 // quad generates two triangles for each face and assigns colors to the vertices
 void quad(int a, int b, int c, int d, glm::vec4 color)
 {
-  v_colors[tri_idx] = color; v_positions[tri_idx] = positions[a];v_positions1[tri_idx] = positions1[a];
+  v_colors[tri_idx] = color; v_positions[tri_idx] = positions[a];v_positions1[tri_idx] = positions1[a];v_positions2[tri_idx] = positions2[a];
   v_normals[tri_idx] = normals[a];
   tex_coords[tri_idx] = t_coords[1];
   tri_idx++;
-  v_colors[tri_idx] = color; v_positions[tri_idx] = positions[b];v_positions1[tri_idx] = positions1[b];
+  v_colors[tri_idx] = color; v_positions[tri_idx] = positions[b];v_positions1[tri_idx] = positions1[b];v_positions2[tri_idx] = positions2[b];
   v_normals[tri_idx] = normals[b];
   tex_coords[tri_idx] = t_coords[0];
   tri_idx++;
-  v_colors[tri_idx] = color; v_positions[tri_idx] = positions[c];v_positions1[tri_idx] = positions1[c];
+  v_colors[tri_idx] = color; v_positions[tri_idx] = positions[c];v_positions1[tri_idx] = positions1[c];v_positions2[tri_idx] = positions2[c];
   v_normals[tri_idx] = normals[c];
   tex_coords[tri_idx] = t_coords[2];
   tri_idx++;
-  v_colors[tri_idx] = color; v_positions[tri_idx] = positions[a];v_positions1[tri_idx] = positions1[a];
+  v_colors[tri_idx] = color; v_positions[tri_idx] = positions[a];v_positions1[tri_idx] = positions1[a];v_positions2[tri_idx] = positions2[a];
   v_normals[tri_idx] = normals[a];
   tex_coords[tri_idx] = t_coords[1];
   tri_idx++;
-  v_colors[tri_idx] = color; v_positions[tri_idx] = positions[c];v_positions1[tri_idx] = positions1[c];
+  v_colors[tri_idx] = color; v_positions[tri_idx] = positions[c];v_positions1[tri_idx] = positions1[c];v_positions2[tri_idx] = positions2[c];
   v_normals[tri_idx] = normals[c];
   tex_coords[tri_idx] = t_coords[2];
   tri_idx++;
-  v_colors[tri_idx] = color; v_positions[tri_idx] = positions[d];v_positions1[tri_idx] = positions1[d];
+  v_colors[tri_idx] = color; v_positions[tri_idx] = positions[d];v_positions1[tri_idx] = positions1[d];v_positions2[tri_idx] = positions2[d];
   v_normals[tri_idx] = normals[d];
   tex_coords[tri_idx] = t_coords[3];
   tri_idx++;
@@ -144,6 +173,36 @@ void colorcube(void)
   quad( 5, 4, 0, 1, blue);
 }
 
+
+
+
+void make_cuboid(int index, glm::vec4* v_pos, glm::vec2* tex_pos, glm::vec4* norm_pos, std::size_t v_count, std::size_t tex_count, std::size_t norm_count, GLuint vPosition, GLuint texCoord, GLuint vNormal)
+{
+//Set 0 as the current array to be used by binding it
+glBindVertexArray (vao[index]);
+//Set 0 as the current buffer to be used by binding it
+glBindBuffer (GL_ARRAY_BUFFER, vbo[index]);
+
+//colorcube();
+
+//Copy the points into the current buffer
+glBufferData (GL_ARRAY_BUFFER, v_count + tex_count + norm_count, NULL, GL_STATIC_DRAW);
+glBufferSubData( GL_ARRAY_BUFFER, 0, v_count, v_pos );
+glBufferSubData( GL_ARRAY_BUFFER, v_count, tex_count, tex_pos);
+glBufferSubData( GL_ARRAY_BUFFER, tex_count + v_count, norm_count, norm_pos );
+// set up vertex array
+//Position
+glEnableVertexAttribArray( vPosition );
+glVertexAttribPointer( vPosition, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0) );
+//Textures
+glEnableVertexAttribArray( texCoord );
+glVertexAttribPointer( texCoord, 2, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(v_count) );
+
+//Normal
+glEnableVertexAttribArray( vNormal );
+glVertexAttribPointer( vNormal, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(v_count + tex_count) );
+
+}
 
 //-----------------------------------------------------------------
 
@@ -171,63 +230,69 @@ void initBuffersGL(void)
   viewMatrix = glGetUniformLocation( shaderProgram, "viewMatrix");
 
   // Load Textures
-  GLuint tex=LoadTexture("images/all1.bmp",256,256);
-  glBindTexture(GL_TEXTURE_2D, tex);
+  GLuint tex1 = LoadTexture("images/all.bmp",512,512);
+  glBindTexture(GL_TEXTURE_2D, tex1);
 
   //Ask GL for two Vertex Attribute Objects (vao) , one for the sphere and one for the wireframe
-  glGenVertexArrays (2, vao);
+  glGenVertexArrays (number_of_vao, vao);
   //Ask GL for two Vertex Buffer Object (vbo)
-  glGenBuffers (2, vbo);
-
-  //Set 0 as the current array to be used by binding it
-  glBindVertexArray (vao[0]);
-  //Set 0 as the current buffer to be used by binding it
-  glBindBuffer (GL_ARRAY_BUFFER, vbo[0]);
+  glGenBuffers (number_of_vao, vbo);
 
   colorcube();
 
-  //Copy the points into the current buffer
-  glBufferData (GL_ARRAY_BUFFER, sizeof (v_positions) + sizeof(tex_coords) + sizeof(v_normals), NULL, GL_STATIC_DRAW);
-  glBufferSubData( GL_ARRAY_BUFFER, 0, sizeof(v_positions), v_positions1 );
-  glBufferSubData( GL_ARRAY_BUFFER, sizeof(v_positions), sizeof(tex_coords), tex_coords);
-  glBufferSubData( GL_ARRAY_BUFFER, sizeof(tex_coords)+sizeof(v_positions), sizeof(v_normals), v_normals );
-  // set up vertex array
-  //Position
-  glEnableVertexAttribArray( vPosition );
-  glVertexAttribPointer( vPosition, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0) );
-  //Textures
-  glEnableVertexAttribArray( texCoord );
-  glVertexAttribPointer( texCoord, 2, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(sizeof(v_positions)) );
+  make_cuboid(0, v_positions, tex_coords, v_normals, sizeof(v_positions), sizeof(tex_coords), sizeof(v_normals), vPosition, texCoord, vNormal);
+  make_cuboid(1, v_positions1, tex_coords, v_normals, sizeof(v_positions), sizeof(tex_coords), sizeof(v_normals), vPosition, texCoord, vNormal);
+  make_cuboid(2, v_positions2, tex_coords, v_normals, sizeof(v_positions), sizeof(tex_coords), sizeof(v_normals), vPosition, texCoord, vNormal);
 
-  //Normal
-  glEnableVertexAttribArray( vNormal );
-  glVertexAttribPointer( vNormal, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(sizeof(v_positions)+sizeof(tex_coords)) );
-
-
-///////////////REPEAT
-
-glBindVertexArray (vao[1]);
-//Set 0 as the current buffer to be used by binding it
-glBindBuffer (GL_ARRAY_BUFFER, vbo[1]);
-
-//Copy the points into the current buffer
-glBufferData (GL_ARRAY_BUFFER, sizeof (v_positions) + sizeof(tex_coords) + sizeof(v_normals), NULL, GL_STATIC_DRAW);
-glBufferSubData( GL_ARRAY_BUFFER, 0, sizeof(v_positions), v_positions );
-glBufferSubData( GL_ARRAY_BUFFER, sizeof(v_positions), sizeof(tex_coords), tex_coords);
-glBufferSubData( GL_ARRAY_BUFFER, sizeof(tex_coords)+sizeof(v_positions), sizeof(v_normals), v_normals );
-// set up vertex array
-//Position
-glEnableVertexAttribArray( vPosition );
-glVertexAttribPointer( vPosition, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0) );
-//Textures
-glEnableVertexAttribArray( texCoord );
-glVertexAttribPointer( texCoord, 2, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(sizeof(v_positions)) );
-
-//Normal
-glEnableVertexAttribArray( vNormal );
-glVertexAttribPointer( vNormal, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(sizeof(v_positions)+sizeof(tex_coords)) );
-
-/////////////////END
+//   //Set 0 as the current array to be used by binding it
+//   glBindVertexArray (vao[0]);
+//   //Set 0 as the current buffer to be used by binding it
+//   glBindBuffer (GL_ARRAY_BUFFER, vbo[0]);
+//
+//   //colorcube();
+//
+//   //Copy the points into the current buffer
+//   glBufferData (GL_ARRAY_BUFFER, sizeof (v_positions) + sizeof(tex_coords) + sizeof(v_normals), NULL, GL_STATIC_DRAW);
+//   glBufferSubData( GL_ARRAY_BUFFER, 0, sizeof(v_positions), v_positions1 );
+//   glBufferSubData( GL_ARRAY_BUFFER, sizeof(v_positions), sizeof(tex_coords), tex_coords);
+//   glBufferSubData( GL_ARRAY_BUFFER, sizeof(tex_coords)+sizeof(v_positions), sizeof(v_normals), v_normals );
+//   // set up vertex array
+//   //Position
+//   glEnableVertexAttribArray( vPosition );
+//   glVertexAttribPointer( vPosition, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0) );
+//   //Textures
+//   glEnableVertexAttribArray( texCoord );
+//   glVertexAttribPointer( texCoord, 2, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(sizeof(v_positions)) );
+//
+//   //Normal
+//   glEnableVertexAttribArray( vNormal );
+//   glVertexAttribPointer( vNormal, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(sizeof(v_positions)+sizeof(tex_coords)) );
+//
+//
+// ///////////////REPEAT
+//
+// glBindVertexArray (vao[1]);
+// //Set 0 as the current buffer to be used by binding it
+// glBindBuffer (GL_ARRAY_BUFFER, vbo[1]);
+//
+// //Copy the points into the current buffer
+// glBufferData (GL_ARRAY_BUFFER, sizeof (v_positions) + sizeof(tex_coords) + sizeof(v_normals), NULL, GL_STATIC_DRAW);
+// glBufferSubData( GL_ARRAY_BUFFER, 0, sizeof(v_positions), v_positions );
+// glBufferSubData( GL_ARRAY_BUFFER, sizeof(v_positions), sizeof(tex_coords), tex_coords);
+// glBufferSubData( GL_ARRAY_BUFFER, sizeof(tex_coords)+sizeof(v_positions), sizeof(v_normals), v_normals );
+// // set up vertex array
+// //Position
+// glEnableVertexAttribArray( vPosition );
+// glVertexAttribPointer( vPosition, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0) );
+// //Textures
+// glEnableVertexAttribArray( texCoord );
+// glVertexAttribPointer( texCoord, 2, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(sizeof(v_positions)) );
+//
+// //Normal
+// glEnableVertexAttribArray( vNormal );
+// glVertexAttribPointer( vNormal, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(sizeof(v_positions)+sizeof(tex_coords)) );
+//
+// /////////////////END
 
 
 }
@@ -252,8 +317,8 @@ void renderGL(void)
   lookat_matrix = glm::lookAt(glm::vec3(c_pos),glm::vec3(0.0),glm::vec3(c_up));
 
   //creating the projection matrix
-
-  projection_matrix = glm::frustum(-1.0, 1.0, -1.0, 1.0, 1.0, 5.0);
+  projection_matrix = glm::frustum(-1.0, 1.0, -1.0, 1.0, 1.0, 18.0);
+//  projection_matrix = glm::frustum(-1.0, 1.0, -1.0, 1.0, 1.0, 5.0);
 
   view_matrix = projection_matrix*lookat_matrix;
 
@@ -265,10 +330,10 @@ void renderGL(void)
   normal_matrix = glm::transpose (glm::inverse(glm::mat3(modelview_matrix)));
   glUniformMatrix3fv(normalMatrix, 1, GL_FALSE, glm::value_ptr(normal_matrix));
   //  glBindTexture(GL_TEXTURE_2D, tex);
-  glBindVertexArray (vao[0]);
+  for(int u = 0; u< number_of_vao; u++){
+  glBindVertexArray (vao[u]);
     glDrawArrays(GL_TRIANGLES, 0, num_vertices);
-  glBindVertexArray (vao[1]);
-  glDrawArrays(GL_TRIANGLES, 0, num_vertices);
+  }
 
 }
 
@@ -292,7 +357,7 @@ int main(int argc, char** argv)
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
   //! Create a windowed mode window and its OpenGL context
-  window = glfwCreateWindow(512, 512, "CS475/CS675 Tutorial 6: Texturing a cube", NULL, NULL);
+  window = glfwCreateWindow(1024, 1024, "CS475/CS675 Tutorial 6: Texturing a cube", NULL, NULL);
   if (!window)
     {
       glfwTerminate();
