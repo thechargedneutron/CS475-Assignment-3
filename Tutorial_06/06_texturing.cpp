@@ -33,8 +33,8 @@ GLuint viewMatrix;
 GLuint normalMatrix;
 //-----------------------------------------------------------------
 
-int number_of_vao = 10;
-GLuint vbo[10], vao[10];
+int number_of_vao = 11;
+GLuint vbo[11], vao[11];
 
 //6 faces, 2 triangles/face, 3 vertices/triangle
 const int num_vertices = 36;
@@ -71,6 +71,8 @@ glm::vec4 tv_table[8];
 glm::vec4 tv_screen[8];
 glm::vec4 tv_stand[8];
 
+glm::vec4 center_table[8];
+
 
 void initialize_coordinates() {
   get_vec4(glm::vec4(-2*s, -s+2*s, 1.5*s, 1.0), 4*s, 2*s, 3*s, room_top);
@@ -83,6 +85,8 @@ void initialize_coordinates() {
   get_vec4(glm::vec4(-22.0, -14.0, -19.0, 1.0), 32.0, 5.0, 5.0, tv_table);
   get_vec4(glm::vec4(-12.0, -8.0, -21.0, 1.0), 14.0, 7.0, 1.0, tv_screen);
   get_vec4(glm::vec4(-8.5, -9.0, -21.0, 1.0), 7.0, 1.0, 1.0, tv_stand);
+
+  get_vec4(glm::vec4(-6.0, -15.0, -11.0, 1.0), 12.0, 1.5, 8, center_table);
 
 }
 
@@ -151,6 +155,8 @@ glm::vec4 v_tv_table[num_vertices];
 glm::vec4 v_tv_screen[num_vertices];
 glm::vec4 v_tv_stand[num_vertices];
 
+glm::vec4 v_center_table[num_vertices];
+
 glm::vec4 v_colors[num_vertices];
 glm::vec4 v_normals[num_vertices];
 glm::vec2 tex_coords[num_vertices];
@@ -168,6 +174,7 @@ void quad(int a, int b, int c, int d, glm::vec4 color)
   v_tv_table[tri_idx] = tv_table[ind];
   v_tv_screen[tri_idx] = tv_screen[ind];
   v_tv_stand[tri_idx] = tv_stand[ind];
+  v_center_table[tri_idx] = center_table[ind];
 
   v_colors[tri_idx] = color;
   v_normals[tri_idx] = normals[a];
@@ -185,6 +192,7 @@ void quad(int a, int b, int c, int d, glm::vec4 color)
   v_tv_table[tri_idx] = tv_table[ind];
   v_tv_screen[tri_idx] = tv_screen[ind];
   v_tv_stand[tri_idx] = tv_stand[ind];
+  v_center_table[tri_idx] = center_table[ind];
 
   v_colors[tri_idx] = color;
   v_normals[tri_idx] = normals[b];
@@ -202,6 +210,7 @@ void quad(int a, int b, int c, int d, glm::vec4 color)
   v_tv_table[tri_idx] = tv_table[ind];
   v_tv_screen[tri_idx] = tv_screen[ind];
   v_tv_stand[tri_idx] = tv_stand[ind];
+  v_center_table[tri_idx] = center_table[ind];
 
   v_colors[tri_idx] = color;
   v_normals[tri_idx] = normals[c];
@@ -219,6 +228,7 @@ void quad(int a, int b, int c, int d, glm::vec4 color)
   v_tv_table[tri_idx] = tv_table[ind];
   v_tv_screen[tri_idx] = tv_screen[ind];
   v_tv_stand[tri_idx] = tv_stand[ind];
+  v_center_table[tri_idx] = center_table[ind];
 
   v_colors[tri_idx] = color;
   v_normals[tri_idx] = normals[a];
@@ -237,6 +247,7 @@ void quad(int a, int b, int c, int d, glm::vec4 color)
   v_tv_table[tri_idx] = tv_table[ind];
   v_tv_screen[tri_idx] = tv_screen[ind];
   v_tv_stand[tri_idx] = tv_stand[ind];
+  v_center_table[tri_idx] = center_table[ind];
 
   v_colors[tri_idx] = color;
   v_normals[tri_idx] = normals[c];
@@ -254,6 +265,7 @@ void quad(int a, int b, int c, int d, glm::vec4 color)
   v_tv_table[tri_idx] = tv_table[ind];
   v_tv_screen[tri_idx] = tv_screen[ind];
   v_tv_stand[tri_idx] = tv_stand[ind];
+  v_center_table[tri_idx] = center_table[ind];
 
   v_colors[tri_idx] = color;
   v_normals[tri_idx] = normals[d];
@@ -353,6 +365,8 @@ void initBuffersGL(void)
   make_cuboid(8, v_tv_screen, tex_coords, v_normals, sizeof(v_tv_screen), sizeof(tex_coords), sizeof(v_normals), vPosition, texCoord, vNormal);
   make_cuboid(9, v_tv_stand, tex_coords, v_normals, sizeof(v_tv_stand), sizeof(tex_coords), sizeof(v_normals), vPosition, texCoord, vNormal);
 
+  make_cuboid(10, v_center_table, tex_coords, v_normals, sizeof(v_center_table), sizeof(tex_coords), sizeof(v_normals), vPosition, texCoord, vNormal);
+
 }
 
 void renderGL(void)
@@ -436,6 +450,11 @@ void renderGL(void)
   GLuint tex6 = LoadTexture("images/ss.bmp",600, 400);
   glBindTexture(GL_TEXTURE_2D, tex6);
   glBindVertexArray (vao[9]);
+  glDrawArrays(GL_TRIANGLES, 0, num_vertices);
+
+  GLuint tex7 = LoadTexture("images/ss.bmp",600, 400);
+  glBindTexture(GL_TEXTURE_2D, tex7);
+  glBindVertexArray (vao[10]);
   glDrawArrays(GL_TRIANGLES, 0, num_vertices);
 
 }
