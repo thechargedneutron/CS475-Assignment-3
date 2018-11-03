@@ -14,7 +14,6 @@
 #include "texture.hpp"
 
 GLuint shaderProgram;
-GLuint vbo[3], vao[3];
 GLuint tex;
 
 glm::mat4 rotation_matrix;
@@ -34,7 +33,8 @@ GLuint viewMatrix;
 GLuint normalMatrix;
 //-----------------------------------------------------------------
 
-int number_of_vao = 3;
+int number_of_vao = 10;
+GLuint vbo[10], vao[10];
 
 //6 faces, 2 triangles/face, 3 vertices/triangle
 const int num_vertices = 36;
@@ -42,52 +42,62 @@ const int num_vertices = 36;
 glm::vec4 texCoordinates[8];
 //Eight vertices in homogenous coordinates
 
-float s = 5.0;
+float s = 16.0;
 
-glm::vec4 positions1[8] = {
-  glm::vec4(-2*s, -s+2*s, 1.5*s, 1.0),
-  glm::vec4(-2*s, s+2*s, 1.5*s, 1.0),
-  glm::vec4(2*s, s+2*s, 1.5*s, 1.0),
-  glm::vec4(2*s, -s+2*s, 1.5*s, 1.0),
-  glm::vec4(-2*s, -s+2*s, -1.5*s, 1.0),
-  glm::vec4(-2*s, s+2*s, -1.5*s, 1.0),
-  glm::vec4(2*s, s+2*s, -1.5*s, 1.0),
-  glm::vec4(2*s, -s+2*s, -1.5*s, 1.0),
+void get_vec4(glm::vec4 bottom_left, float xspan, float yspan, float zspan, glm::vec4* positions){
+  /*
+  Takes the bottom left vec4 as input, along with the dimensions of the cube. Make the rest of the
+  coordinates accordingly.
+  */
+  positions[0] = bottom_left;
+  positions[1] = bottom_left + glm::vec4(xspan, 0.0, 0.0, 0.0);
+  positions[2] = bottom_left + glm::vec4(xspan, yspan, 0.0, 0.0);
+  positions[3] = bottom_left + glm::vec4(0.0, yspan, 0.0, 0.0);
+
+  positions[4] = bottom_left + glm::vec4(0.0, 0.0, -zspan, 0.0);
+  positions[5] = bottom_left + glm::vec4(xspan, 0.0, -zspan, 0.0);
+  positions[6] = bottom_left + glm::vec4(xspan, yspan, -zspan, 0.0);
+  positions[7] = bottom_left + glm::vec4(0.0, yspan, -zspan, 0.0);
+}
+
+glm::vec4 room_top[8];
+glm::vec4 room_bottom[8];
+glm::vec4 room_right[8];
+glm::vec4 room_left[8];
+glm::vec4 room_front[8];
+glm::vec4 room_back[8];
+
+glm::vec4 tv_table[8];
+glm::vec4 tv_screen[8];
+glm::vec4 tv_stand[8];
+
+
+void initialize_coordinates() {
+  get_vec4(glm::vec4(-2*s, -s+2*s, 1.5*s, 1.0), 4*s, 2*s, 3*s, room_top);
+  get_vec4(glm::vec4(-2*s, -s-2*s, 1.5*s, 1.0), 4*s, 2*s, 3*s, room_bottom);
+  get_vec4(glm::vec4(-2*s+4*s, -s, 1.5*s, 1.0), 4*s, 2*s, 3*s, room_right);
+  get_vec4(glm::vec4(-2*s-4*s, -s, 1.5*s, 1.0), 4*s, 2*s, 3*s, room_left);
+  get_vec4(glm::vec4(-2*s, -s, 1.5*s-3*s, 1.0), 4*s, 2*s, 3*s, room_front);
+  get_vec4(glm::vec4(-2*s, -s, 1.5*s+3*s, 1.0), 4*s, 2*s, 3*s, room_back);
+
+  get_vec4(glm::vec4(-22.0, -14.0, -19.0, 1.0), 32.0, 5.0, 5.0, tv_table);
+  get_vec4(glm::vec4(-12.0, -8.0, -21.0, 1.0), 14.0, 7.0, 1.0, tv_screen);
+  get_vec4(glm::vec4(-8.5, -9.0, -21.0, 1.0), 7.0, 1.0, 1.0, tv_stand);
+
+}
+
+
+glm::vec4 bookshelf[8] = {
+  glm::vec4(14.0, 0.0, 24.0, 1.0),
+  glm::vec4(28.0, 0.0, 24.0, 1.0),
+  glm::vec4(28.0, 12.0, 24.0, 1.0),
+  glm::vec4(14.0, 12.0, 24.0, 1.0),
+  glm::vec4(14.0, 0.0, 16.0, 1.0),
+  glm::vec4(28.0, 0.0, 16.0, 1.0),
+  glm::vec4(28.0, 12.0, 16.0, 1.0),
+  glm::vec4(14.0, 12.0, 16.0, 1.0),
 };
 
-glm::vec4 positions[8] = {
-  glm::vec4(-2*s, -s-2*s, 1.5*s, 1.0),
-  glm::vec4(-2*s, s-2*s, 1.5*s, 1.0),
-  glm::vec4(2*s, s-2*s, 1.5*s, 1.0),
-  glm::vec4(2*s, -s-2*s, 1.5*s, 1.0),
-  glm::vec4(-2*s, -s-2*s, -1.5*s, 1.0),
-  glm::vec4(-2*s, s-2*s, -1.5*s, 1.0),
-  glm::vec4(2*s, s-2*s, -1.5*s, 1.0),
-  glm::vec4(2*s, -s-2*s, -1.5*s, 1.0),
-};
-
-glm::vec4 positions2[8] = {
-  glm::vec4(-2*s+4*s, -s, 1.5*s, 1.0),
-  glm::vec4(-2*s+4*s, s, 1.5*s, 1.0),
-  glm::vec4(2*s+4*s, s, 1.5*s, 1.0),
-  glm::vec4(2*s+4*s, -s, 1.5*s, 1.0),
-  glm::vec4(-2*s+4*s, -s, -1.5*s, 1.0),
-  glm::vec4(-2*s+4*s, s, -1.5*s, 1.0),
-  glm::vec4(2*s+4*s, s, -1.5*s, 1.0),
-  glm::vec4(2*s+4*s, -s, -1.5*s, 1.0),
-};
-
-
-// glm::vec4 positions[8] = {
-//   glm::vec4(-0.5, -0.5+1.0, 0.5, 1.0),
-//   glm::vec4(-0.5, 0.5+1.0, 0.5, 1.0),
-//   glm::vec4(0.5, 0.5+1.0, 0.5, 1.0),
-//   glm::vec4(0.5, -0.5+1.0, 0.5, 1.0),
-//   glm::vec4(-0.5, -0.5+1.0, -0.5, 1.0),
-//   glm::vec4(-0.5, 0.5+1.0, -0.5, 1.0),
-//   glm::vec4(0.5, 0.5+1.0, -0.5, 1.0),
-//   glm::vec4(0.5, -0.5+1.0, -0.5, 1.0)
-// };
 
 glm::vec4 normals[8] = {
   glm::vec4(-0.5, -0.5, 0.5, 1.0),
@@ -127,36 +137,125 @@ glm::vec4 green(0.2, 0.7, 0.2, 1.0);
 glm::vec4 blue(0.2, 0.2, 0.7, 1.0);
 
 int tri_idx=0;
-glm::vec4 v_positions[num_vertices];
-glm::vec4 v_positions1[num_vertices];
-glm::vec4 v_positions2[num_vertices];
+int ind = 0;
+
+glm::vec4 v_room_front[num_vertices];
+glm::vec4 v_room_back[num_vertices];
+glm::vec4 v_room_right[num_vertices];
+glm::vec4 v_room_left[num_vertices];
+glm::vec4 v_room_top[num_vertices];
+glm::vec4 v_room_bottom[num_vertices];
+
+glm::vec4 v_bookshelf[num_vertices];
+glm::vec4 v_tv_table[num_vertices];
+glm::vec4 v_tv_screen[num_vertices];
+glm::vec4 v_tv_stand[num_vertices];
+
 glm::vec4 v_colors[num_vertices];
 glm::vec4 v_normals[num_vertices];
 glm::vec2 tex_coords[num_vertices];
 // quad generates two triangles for each face and assigns colors to the vertices
 void quad(int a, int b, int c, int d, glm::vec4 color)
 {
-  v_colors[tri_idx] = color; v_positions[tri_idx] = positions[a];v_positions1[tri_idx] = positions1[a];v_positions2[tri_idx] = positions2[a];
+  ind = a;             //<-------------------------------a
+  v_room_top[tri_idx] = room_top[ind];
+  v_room_bottom[tri_idx] = room_bottom[ind];
+  v_room_left[tri_idx] = room_left[ind];
+  v_room_right[tri_idx] = room_right[ind];
+  v_room_front[tri_idx] = room_front[ind];
+  v_room_back[tri_idx] = room_back[ind];
+  v_bookshelf[tri_idx] = bookshelf[ind];
+  v_tv_table[tri_idx] = tv_table[ind];
+  v_tv_screen[tri_idx] = tv_screen[ind];
+  v_tv_stand[tri_idx] = tv_stand[ind];
+
+  v_colors[tri_idx] = color;
   v_normals[tri_idx] = normals[a];
   tex_coords[tri_idx] = t_coords[1];
   tri_idx++;
-  v_colors[tri_idx] = color; v_positions[tri_idx] = positions[b];v_positions1[tri_idx] = positions1[b];v_positions2[tri_idx] = positions2[b];
+
+  ind = b;             //<-------------------------------b
+  v_room_top[tri_idx] = room_top[ind];
+  v_room_bottom[tri_idx] = room_bottom[ind];
+  v_room_left[tri_idx] = room_left[ind];
+  v_room_right[tri_idx] = room_right[ind];
+  v_room_front[tri_idx] = room_front[ind];
+  v_room_back[tri_idx] = room_back[ind];
+  v_bookshelf[tri_idx] = bookshelf[ind];
+  v_tv_table[tri_idx] = tv_table[ind];
+  v_tv_screen[tri_idx] = tv_screen[ind];
+  v_tv_stand[tri_idx] = tv_stand[ind];
+
+  v_colors[tri_idx] = color;
   v_normals[tri_idx] = normals[b];
   tex_coords[tri_idx] = t_coords[0];
   tri_idx++;
-  v_colors[tri_idx] = color; v_positions[tri_idx] = positions[c];v_positions1[tri_idx] = positions1[c];v_positions2[tri_idx] = positions2[c];
+
+  ind = c;             //<-------------------------------c
+  v_room_top[tri_idx] = room_top[ind];
+  v_room_bottom[tri_idx] = room_bottom[ind];
+  v_room_left[tri_idx] = room_left[ind];
+  v_room_right[tri_idx] = room_right[ind];
+  v_room_front[tri_idx] = room_front[ind];
+  v_room_back[tri_idx] = room_back[ind];
+  v_bookshelf[tri_idx] = bookshelf[ind];
+  v_tv_table[tri_idx] = tv_table[ind];
+  v_tv_screen[tri_idx] = tv_screen[ind];
+  v_tv_stand[tri_idx] = tv_stand[ind];
+
+  v_colors[tri_idx] = color;
   v_normals[tri_idx] = normals[c];
   tex_coords[tri_idx] = t_coords[2];
   tri_idx++;
-  v_colors[tri_idx] = color; v_positions[tri_idx] = positions[a];v_positions1[tri_idx] = positions1[a];v_positions2[tri_idx] = positions2[a];
+
+  ind = a;             //<-------------------------------a
+  v_room_top[tri_idx] = room_top[ind];
+  v_room_bottom[tri_idx] = room_bottom[ind];
+  v_room_left[tri_idx] = room_left[ind];
+  v_room_right[tri_idx] = room_right[ind];
+  v_room_front[tri_idx] = room_front[ind];
+  v_room_back[tri_idx] = room_back[ind];
+  v_bookshelf[tri_idx] = bookshelf[ind];
+  v_tv_table[tri_idx] = tv_table[ind];
+  v_tv_screen[tri_idx] = tv_screen[ind];
+  v_tv_stand[tri_idx] = tv_stand[ind];
+
+  v_colors[tri_idx] = color;
   v_normals[tri_idx] = normals[a];
   tex_coords[tri_idx] = t_coords[1];
   tri_idx++;
-  v_colors[tri_idx] = color; v_positions[tri_idx] = positions[c];v_positions1[tri_idx] = positions1[c];v_positions2[tri_idx] = positions2[c];
+
+
+  ind = c;             //<-------------------------------c
+  v_room_top[tri_idx] = room_top[ind];
+  v_room_bottom[tri_idx] = room_bottom[ind];
+  v_room_left[tri_idx] = room_left[ind];
+  v_room_right[tri_idx] = room_right[ind];
+  v_room_front[tri_idx] = room_front[ind];
+  v_room_back[tri_idx] = room_back[ind];
+  v_bookshelf[tri_idx] = bookshelf[ind];
+  v_tv_table[tri_idx] = tv_table[ind];
+  v_tv_screen[tri_idx] = tv_screen[ind];
+  v_tv_stand[tri_idx] = tv_stand[ind];
+
+  v_colors[tri_idx] = color;
   v_normals[tri_idx] = normals[c];
   tex_coords[tri_idx] = t_coords[2];
   tri_idx++;
-  v_colors[tri_idx] = color; v_positions[tri_idx] = positions[d];v_positions1[tri_idx] = positions1[d];v_positions2[tri_idx] = positions2[d];
+
+  ind = d;             //<-------------------------------d
+  v_room_top[tri_idx] = room_top[ind];
+  v_room_bottom[tri_idx] = room_bottom[ind];
+  v_room_left[tri_idx] = room_left[ind];
+  v_room_right[tri_idx] = room_right[ind];
+  v_room_front[tri_idx] = room_front[ind];
+  v_room_back[tri_idx] = room_back[ind];
+  v_bookshelf[tri_idx] = bookshelf[ind];
+  v_tv_table[tri_idx] = tv_table[ind];
+  v_tv_screen[tri_idx] = tv_screen[ind];
+  v_tv_stand[tri_idx] = tv_stand[ind];
+
+  v_colors[tri_idx] = color;
   v_normals[tri_idx] = normals[d];
   tex_coords[tri_idx] = t_coords[3];
   tri_idx++;
@@ -202,12 +301,16 @@ glVertexAttribPointer( texCoord, 2, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(v_count
 glEnableVertexAttribArray( vNormal );
 glVertexAttribPointer( vNormal, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(v_count + tex_count) );
 
+
+
 }
 
 //-----------------------------------------------------------------
 
 void initBuffersGL(void)
 {
+
+  initialize_coordinates();
 
   // Load shaders and use the resulting shader program
   std::string vertex_shader_file("06_vshader.glsl");
@@ -230,8 +333,6 @@ void initBuffersGL(void)
   viewMatrix = glGetUniformLocation( shaderProgram, "viewMatrix");
 
   // Load Textures
-  GLuint tex1 = LoadTexture("images/all.bmp",512,512);
-  glBindTexture(GL_TEXTURE_2D, tex1);
 
   //Ask GL for two Vertex Attribute Objects (vao) , one for the sphere and one for the wireframe
   glGenVertexArrays (number_of_vao, vao);
@@ -240,60 +341,17 @@ void initBuffersGL(void)
 
   colorcube();
 
-  make_cuboid(0, v_positions, tex_coords, v_normals, sizeof(v_positions), sizeof(tex_coords), sizeof(v_normals), vPosition, texCoord, vNormal);
-  make_cuboid(1, v_positions1, tex_coords, v_normals, sizeof(v_positions), sizeof(tex_coords), sizeof(v_normals), vPosition, texCoord, vNormal);
-  make_cuboid(2, v_positions2, tex_coords, v_normals, sizeof(v_positions), sizeof(tex_coords), sizeof(v_normals), vPosition, texCoord, vNormal);
+  make_cuboid(0, v_room_top, tex_coords, v_normals, sizeof(v_room_top), sizeof(tex_coords), sizeof(v_normals), vPosition, texCoord, vNormal);
+  make_cuboid(1, v_room_bottom, tex_coords, v_normals, sizeof(v_room_bottom), sizeof(tex_coords), sizeof(v_normals), vPosition, texCoord, vNormal);
+  make_cuboid(2, v_room_front, tex_coords, v_normals, sizeof(v_room_front), sizeof(tex_coords), sizeof(v_normals), vPosition, texCoord, vNormal);
+  make_cuboid(3, v_room_back, tex_coords, v_normals, sizeof(v_room_back), sizeof(tex_coords), sizeof(v_normals), vPosition, texCoord, vNormal);
+  make_cuboid(4, v_room_right, tex_coords, v_normals, sizeof(v_room_right), sizeof(tex_coords), sizeof(v_normals), vPosition, texCoord, vNormal);
+  make_cuboid(5, v_room_left, tex_coords, v_normals, sizeof(v_room_left), sizeof(tex_coords), sizeof(v_normals), vPosition, texCoord, vNormal);
 
-//   //Set 0 as the current array to be used by binding it
-//   glBindVertexArray (vao[0]);
-//   //Set 0 as the current buffer to be used by binding it
-//   glBindBuffer (GL_ARRAY_BUFFER, vbo[0]);
-//
-//   //colorcube();
-//
-//   //Copy the points into the current buffer
-//   glBufferData (GL_ARRAY_BUFFER, sizeof (v_positions) + sizeof(tex_coords) + sizeof(v_normals), NULL, GL_STATIC_DRAW);
-//   glBufferSubData( GL_ARRAY_BUFFER, 0, sizeof(v_positions), v_positions1 );
-//   glBufferSubData( GL_ARRAY_BUFFER, sizeof(v_positions), sizeof(tex_coords), tex_coords);
-//   glBufferSubData( GL_ARRAY_BUFFER, sizeof(tex_coords)+sizeof(v_positions), sizeof(v_normals), v_normals );
-//   // set up vertex array
-//   //Position
-//   glEnableVertexAttribArray( vPosition );
-//   glVertexAttribPointer( vPosition, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0) );
-//   //Textures
-//   glEnableVertexAttribArray( texCoord );
-//   glVertexAttribPointer( texCoord, 2, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(sizeof(v_positions)) );
-//
-//   //Normal
-//   glEnableVertexAttribArray( vNormal );
-//   glVertexAttribPointer( vNormal, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(sizeof(v_positions)+sizeof(tex_coords)) );
-//
-//
-// ///////////////REPEAT
-//
-// glBindVertexArray (vao[1]);
-// //Set 0 as the current buffer to be used by binding it
-// glBindBuffer (GL_ARRAY_BUFFER, vbo[1]);
-//
-// //Copy the points into the current buffer
-// glBufferData (GL_ARRAY_BUFFER, sizeof (v_positions) + sizeof(tex_coords) + sizeof(v_normals), NULL, GL_STATIC_DRAW);
-// glBufferSubData( GL_ARRAY_BUFFER, 0, sizeof(v_positions), v_positions );
-// glBufferSubData( GL_ARRAY_BUFFER, sizeof(v_positions), sizeof(tex_coords), tex_coords);
-// glBufferSubData( GL_ARRAY_BUFFER, sizeof(tex_coords)+sizeof(v_positions), sizeof(v_normals), v_normals );
-// // set up vertex array
-// //Position
-// glEnableVertexAttribArray( vPosition );
-// glVertexAttribPointer( vPosition, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0) );
-// //Textures
-// glEnableVertexAttribArray( texCoord );
-// glVertexAttribPointer( texCoord, 2, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(sizeof(v_positions)) );
-//
-// //Normal
-// glEnableVertexAttribArray( vNormal );
-// glVertexAttribPointer( vNormal, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(sizeof(v_positions)+sizeof(tex_coords)) );
-//
-// /////////////////END
-
+  make_cuboid(6, v_bookshelf, tex_coords, v_normals, sizeof(v_bookshelf), sizeof(tex_coords), sizeof(v_normals), vPosition, texCoord, vNormal);
+  make_cuboid(7, v_tv_table, tex_coords, v_normals, sizeof(v_tv_table), sizeof(tex_coords), sizeof(v_normals), vPosition, texCoord, vNormal);
+  make_cuboid(8, v_tv_screen, tex_coords, v_normals, sizeof(v_tv_screen), sizeof(tex_coords), sizeof(v_normals), vPosition, texCoord, vNormal);
+  make_cuboid(9, v_tv_stand, tex_coords, v_normals, sizeof(v_tv_stand), sizeof(tex_coords), sizeof(v_normals), vPosition, texCoord, vNormal);
 
 }
 
@@ -317,7 +375,7 @@ void renderGL(void)
   lookat_matrix = glm::lookAt(glm::vec3(c_pos),glm::vec3(0.0),glm::vec3(c_up));
 
   //creating the projection matrix
-  projection_matrix = glm::frustum(-1.0, 1.0, -1.0, 1.0, 1.0, 18.0);
+  projection_matrix = glm::frustum(-1.0, 1.0, -1.0, 1.0, 1.0, 45.0);
 //  projection_matrix = glm::frustum(-1.0, 1.0, -1.0, 1.0, 1.0, 5.0);
 
   view_matrix = projection_matrix*lookat_matrix;
@@ -330,10 +388,55 @@ void renderGL(void)
   normal_matrix = glm::transpose (glm::inverse(glm::mat3(modelview_matrix)));
   glUniformMatrix3fv(normalMatrix, 1, GL_FALSE, glm::value_ptr(normal_matrix));
   //  glBindTexture(GL_TEXTURE_2D, tex);
-  for(int u = 0; u< number_of_vao; u++){
-  glBindVertexArray (vao[u]);
-    glDrawArrays(GL_TRIANGLES, 0, num_vertices);
-  }
+  // for(int u = 0; u< number_of_vao; u++){
+  // glBindVertexArray (vao[u]);
+  // glDrawArrays(GL_TRIANGLES, 0, num_vertices);
+  // }
+  GLuint tex1 = LoadTexture("images/all.bmp",512,512);
+  glBindTexture(GL_TEXTURE_2D, tex1);
+
+  glBindVertexArray (vao[0]);
+  glDrawArrays(GL_TRIANGLES, 0, num_vertices);
+
+  GLuint tex2 = LoadTexture("images/floor_tile.bmp",3000,2160);
+  glBindTexture(GL_TEXTURE_2D, tex2);
+
+  glBindVertexArray (vao[1]);
+  glDrawArrays(GL_TRIANGLES, 0, num_vertices);
+
+  GLuint tex4 = LoadTexture("images/wall.bmp",550,364);
+  glBindTexture(GL_TEXTURE_2D, tex4);
+
+  glBindVertexArray (vao[2]);
+  glDrawArrays(GL_TRIANGLES, 0, num_vertices);
+
+  glBindVertexArray (vao[3]);
+  glDrawArrays(GL_TRIANGLES, 0, num_vertices);
+
+  glBindVertexArray (vao[4]);
+  glDrawArrays(GL_TRIANGLES, 0, num_vertices);
+
+  glBindVertexArray (vao[5]);
+  glDrawArrays(GL_TRIANGLES, 0, num_vertices);
+
+  glBindVertexArray (vao[6]);
+  glDrawArrays(GL_TRIANGLES, 0, num_vertices);
+
+  GLuint tex3 = LoadTexture("images/tv_table.bmp",600,600);
+  glBindTexture(GL_TEXTURE_2D, tex3);
+  glBindVertexArray (vao[7]);
+  glDrawArrays(GL_TRIANGLES, 0, num_vertices);
+
+
+  GLuint tex5 = LoadTexture("images/sony.bmp",2068,1180);
+  glBindTexture(GL_TEXTURE_2D, tex5);
+  glBindVertexArray (vao[8]);
+  glDrawArrays(GL_TRIANGLES, 0, num_vertices);
+
+  GLuint tex6 = LoadTexture("images/ss.bmp",600, 400);
+  glBindTexture(GL_TEXTURE_2D, tex6);
+  glBindVertexArray (vao[9]);
+  glDrawArrays(GL_TRIANGLES, 0, num_vertices);
 
 }
 
