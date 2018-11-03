@@ -2,7 +2,7 @@
   CSX75 Tutorial 6 Texturing a Cube
 
 
-  Modified from An Introduction to OpenGL Programming, 
+  Modified from An Introduction to OpenGL Programming,
   Ed Angel and Dave Shreiner, SIGGRAPH 2013
 
   Written by Aditya Prakash, 2015
@@ -39,7 +39,7 @@ const int num_vertices = 36;
 
 glm::vec4 texCoordinates[8];
 //Eight vertices in homogenous coordinates
-glm::vec4 positions[8] = {
+glm::vec4 positions1[8] = {
   glm::vec4(-0.5, -0.5, 0.5, 1.0),
   glm::vec4(-0.5, 0.5, 0.5, 1.0),
   glm::vec4(0.5, 0.5, 0.5, 1.0),
@@ -48,6 +48,17 @@ glm::vec4 positions[8] = {
   glm::vec4(-0.5, 0.5, -0.5, 1.0),
   glm::vec4(0.5, 0.5, -0.5, 1.0),
   glm::vec4(0.5, -0.5, -0.5, 1.0)
+};
+
+glm::vec4 positions[8] = {
+  glm::vec4(-0.5, -0.5+1.0, 0.5, 1.0),
+  glm::vec4(-0.5, 0.5+1.0, 0.5, 1.0),
+  glm::vec4(0.5, 0.5+1.0, 0.5, 1.0),
+  glm::vec4(0.5, -0.5+1.0, 0.5, 1.0),
+  glm::vec4(-0.5, -0.5+1.0, -0.5, 1.0),
+  glm::vec4(-0.5, 0.5+1.0, -0.5, 1.0),
+  glm::vec4(0.5, 0.5+1.0, -0.5, 1.0),
+  glm::vec4(0.5, -0.5+1.0, -0.5, 1.0)
 };
 
 glm::vec4 normals[8] = {
@@ -89,34 +100,35 @@ glm::vec4 blue(0.2, 0.2, 0.7, 1.0);
 
 int tri_idx=0;
 glm::vec4 v_positions[num_vertices];
+glm::vec4 v_positions1[num_vertices];
 glm::vec4 v_colors[num_vertices];
 glm::vec4 v_normals[num_vertices];
 glm::vec2 tex_coords[num_vertices];
 // quad generates two triangles for each face and assigns colors to the vertices
 void quad(int a, int b, int c, int d, glm::vec4 color)
 {
-  v_colors[tri_idx] = color; v_positions[tri_idx] = positions[a]; 
-  v_normals[tri_idx] = normals[a]; 
+  v_colors[tri_idx] = color; v_positions[tri_idx] = positions[a];v_positions1[tri_idx] = positions1[a];
+  v_normals[tri_idx] = normals[a];
   tex_coords[tri_idx] = t_coords[1];
   tri_idx++;
-  v_colors[tri_idx] = color; v_positions[tri_idx] = positions[b];
-  v_normals[tri_idx] = normals[b]; 
+  v_colors[tri_idx] = color; v_positions[tri_idx] = positions[b];v_positions1[tri_idx] = positions1[b];
+  v_normals[tri_idx] = normals[b];
   tex_coords[tri_idx] = t_coords[0];
   tri_idx++;
-  v_colors[tri_idx] = color; v_positions[tri_idx] = positions[c]; 
-  v_normals[tri_idx] = normals[c]; 
+  v_colors[tri_idx] = color; v_positions[tri_idx] = positions[c];v_positions1[tri_idx] = positions1[c];
+  v_normals[tri_idx] = normals[c];
   tex_coords[tri_idx] = t_coords[2];
   tri_idx++;
-  v_colors[tri_idx] = color; v_positions[tri_idx] = positions[a]; 
-  v_normals[tri_idx] = normals[a]; 
+  v_colors[tri_idx] = color; v_positions[tri_idx] = positions[a];v_positions1[tri_idx] = positions1[a];
+  v_normals[tri_idx] = normals[a];
   tex_coords[tri_idx] = t_coords[1];
   tri_idx++;
-  v_colors[tri_idx] = color; v_positions[tri_idx] = positions[c]; 
-  v_normals[tri_idx] = normals[c]; 
+  v_colors[tri_idx] = color; v_positions[tri_idx] = positions[c];v_positions1[tri_idx] = positions1[c];
+  v_normals[tri_idx] = normals[c];
   tex_coords[tri_idx] = t_coords[2];
   tri_idx++;
-  v_colors[tri_idx] = color; v_positions[tri_idx] = positions[d]; 
-  v_normals[tri_idx] = normals[d]; 
+  v_colors[tri_idx] = color; v_positions[tri_idx] = positions[d];v_positions1[tri_idx] = positions1[d];
+  v_normals[tri_idx] = normals[d];
   tex_coords[tri_idx] = t_coords[3];
   tri_idx++;
  }
@@ -151,14 +163,14 @@ void initBuffersGL(void)
 
   // getting the attributes from the shader program
   GLuint vPosition = glGetAttribLocation( shaderProgram, "vPosition" );
-  GLuint vColor = glGetAttribLocation( shaderProgram, "vColor" ); 
-  GLuint vNormal = glGetAttribLocation( shaderProgram, "vNormal" ); 
-  GLuint texCoord = glGetAttribLocation( shaderProgram, "texCoord" ); 
+  GLuint vColor = glGetAttribLocation( shaderProgram, "vColor" );
+  GLuint vNormal = glGetAttribLocation( shaderProgram, "vNormal" );
+  GLuint texCoord = glGetAttribLocation( shaderProgram, "texCoord" );
   uModelViewMatrix = glGetUniformLocation( shaderProgram, "uModelViewMatrix");
   normalMatrix =  glGetUniformLocation( shaderProgram, "normalMatrix");
   viewMatrix = glGetUniformLocation( shaderProgram, "viewMatrix");
 
-  // Load Textures 
+  // Load Textures
   GLuint tex=LoadTexture("images/all1.bmp",256,256);
   glBindTexture(GL_TEXTURE_2D, tex);
 
@@ -176,7 +188,7 @@ void initBuffersGL(void)
 
   //Copy the points into the current buffer
   glBufferData (GL_ARRAY_BUFFER, sizeof (v_positions) + sizeof(tex_coords) + sizeof(v_normals), NULL, GL_STATIC_DRAW);
-  glBufferSubData( GL_ARRAY_BUFFER, 0, sizeof(v_positions), v_positions );
+  glBufferSubData( GL_ARRAY_BUFFER, 0, sizeof(v_positions), v_positions1 );
   glBufferSubData( GL_ARRAY_BUFFER, sizeof(v_positions), sizeof(tex_coords), tex_coords);
   glBufferSubData( GL_ARRAY_BUFFER, sizeof(tex_coords)+sizeof(v_positions), sizeof(v_normals), v_normals );
   // set up vertex array
@@ -191,7 +203,31 @@ void initBuffersGL(void)
   glEnableVertexAttribArray( vNormal );
   glVertexAttribPointer( vNormal, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(sizeof(v_positions)+sizeof(tex_coords)) );
 
-  
+
+///////////////REPEAT
+
+glBindVertexArray (vao[1]);
+//Set 0 as the current buffer to be used by binding it
+glBindBuffer (GL_ARRAY_BUFFER, vbo[1]);
+
+//Copy the points into the current buffer
+glBufferData (GL_ARRAY_BUFFER, sizeof (v_positions) + sizeof(tex_coords) + sizeof(v_normals), NULL, GL_STATIC_DRAW);
+glBufferSubData( GL_ARRAY_BUFFER, 0, sizeof(v_positions), v_positions );
+glBufferSubData( GL_ARRAY_BUFFER, sizeof(v_positions), sizeof(tex_coords), tex_coords);
+glBufferSubData( GL_ARRAY_BUFFER, sizeof(tex_coords)+sizeof(v_positions), sizeof(v_normals), v_normals );
+// set up vertex array
+//Position
+glEnableVertexAttribArray( vPosition );
+glVertexAttribPointer( vPosition, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0) );
+//Textures
+glEnableVertexAttribArray( texCoord );
+glVertexAttribPointer( texCoord, 2, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(sizeof(v_positions)) );
+
+//Normal
+glEnableVertexAttribArray( vNormal );
+glVertexAttribPointer( vNormal, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(sizeof(v_positions)+sizeof(tex_coords)) );
+
+/////////////////END
 
 
 }
@@ -216,7 +252,7 @@ void renderGL(void)
   lookat_matrix = glm::lookAt(glm::vec3(c_pos),glm::vec3(0.0),glm::vec3(c_up));
 
   //creating the projection matrix
- 
+
   projection_matrix = glm::frustum(-1.0, 1.0, -1.0, 1.0, 1.0, 5.0);
 
   view_matrix = projection_matrix*lookat_matrix;
@@ -230,8 +266,10 @@ void renderGL(void)
   glUniformMatrix3fv(normalMatrix, 1, GL_FALSE, glm::value_ptr(normal_matrix));
   //  glBindTexture(GL_TEXTURE_2D, tex);
   glBindVertexArray (vao[0]);
+    glDrawArrays(GL_TRIANGLES, 0, num_vertices);
+  glBindVertexArray (vao[1]);
   glDrawArrays(GL_TRIANGLES, 0, num_vertices);
-  
+
 }
 
 int main(int argc, char** argv)
@@ -246,12 +284,12 @@ int main(int argc, char** argv)
   if (!glfwInit())
     return -1;
   //We want OpenGL 4.0
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); 
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   //This is for MacOSX - can be omitted otherwise
-  glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); 
-  //We don't want the old OpenGL 
-  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); 
+  glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+  //We don't want the old OpenGL
+  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
   //! Create a windowed mode window and its OpenGL context
   window = glfwCreateWindow(512, 512, "CS475/CS675 Tutorial 6: Texturing a cube", NULL, NULL);
@@ -260,8 +298,8 @@ int main(int argc, char** argv)
       glfwTerminate();
       return -1;
     }
-  
-  //! Make the window's context current 
+
+  //! Make the window's context current
   glfwMakeContextCurrent(window);
 
   //Initialize GLEW
@@ -288,20 +326,19 @@ int main(int argc, char** argv)
   // Loop until the user closes the window
   while (glfwWindowShouldClose(window) == 0)
     {
-       
+
       // Render here
       renderGL();
 
       // Swap front and back buffers
       glfwSwapBuffers(window);
-      
+
       // Poll for and process events
       glfwPollEvents();
     }
-  
+
   glfwTerminate();
   return 0;
 }
 
 //-------------------------------------------------------------------------
-
