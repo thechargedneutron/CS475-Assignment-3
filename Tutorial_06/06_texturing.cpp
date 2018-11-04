@@ -28,15 +28,14 @@ glm::mat4 view_matrix;
 glm::mat4 modelview_matrix;
 glm::mat3 normal_matrix;
 
-GLuint uModelViewMatrix;
 GLuint viewMatrix;
 GLuint normalMatrix;
 
 GLuint test;
 //-----------------------------------------------------------------
 
-int number_of_vao = 11;
-GLuint vbo[11], vao[11];
+int number_of_vao = 12;
+GLuint vbo[12], vao[12];
 
 //6 faces, 2 triangles/face, 3 vertices/triangle
 const int num_vertices = 36;
@@ -75,6 +74,111 @@ glm::vec4 tv_stand[8];
 
 glm::vec4 center_table[8];
 
+///////////////////////Lower Box/////////////////////////////////
+glm::vec4 b_lower_front[8] = {
+  glm::vec4(-7.5, -8.0, 3.0, 1.0),
+  glm::vec4(7.5, -8.0, 3.0, 1.0),
+  glm::vec4(7.5, 0.0, 3.0, 1.0),
+  glm::vec4(-7.5, 0.0, 3.0, 1.0),
+  glm::vec4(-7.5, -8.0, 2.5, 1.0),
+  glm::vec4(7.5, -8.0, 2.5, 1.0),
+  glm::vec4(7.5, 0.0, 2.5, 1.0),
+  glm::vec4(-7.5, 0.0, 2.5, 1.0)
+};
+glm::vec4 b_lower_back[8] = {
+  glm::vec4(-7.5, -8.0, -3.0, 1.0),
+  glm::vec4(7.5, -8.0, -3.0, 1.0),
+  glm::vec4(7.5, 0.0, -3.0, 1.0),
+  glm::vec4(-7.5, 0.0, -3.0, 1.0),
+  glm::vec4(-7.5, -8.0, -2.5, 1.0),
+  glm::vec4(7.5, -8.0, -2.5, 1.0),
+  glm::vec4(7.5, 0.0, -2.5, 1.0),
+  glm::vec4(-7.5, 0.0, -2.5, 1.0)
+};
+glm::vec4 b_lower_lower[8] = {
+  glm::vec4(-7.5, -8.0, 2.5, 1.0),
+  glm::vec4(7.5, -8.0, 2.5, 1.0),
+  glm::vec4(7.5, -7.5, 2.5, 1.0),
+  glm::vec4(-7.5, -7.5, 2.5, 1.0),
+  glm::vec4(-7.5, -8.0, -2.5, 1.0),
+  glm::vec4(7.5, -8.0, -2.5, 1.0),
+  glm::vec4(7.5, -7.5, -2.5, 1.0),
+  glm::vec4(-7.5, -7.5, -2.5, 1.0)
+};
+glm::vec4 b_lower_left[8] = {
+  glm::vec4(-8.0, -8.0, 3.0, 1.0),
+  glm::vec4(-7.5, -8.0, 3.0, 1.0),
+  glm::vec4(-7.5, 0.0, 3.0, 1.0),
+  glm::vec4(-8.0, 0.0, 3.0, 1.0),
+  glm::vec4(-8.0, -8.0, -3.0, 1.0),
+  glm::vec4(-7.5, -8.0, -3.0, 1.0),
+  glm::vec4(-7.5, 0.0, -3.0, 1.0),
+  glm::vec4(-8.0, 0.0, -3.0, 1.0)
+};
+glm::vec4 b_lower_right[8] = {
+  glm::vec4(8.0, -8.0, 3.0, 1.0),
+  glm::vec4(7.5, -8.0, 3.0, 1.0),
+  glm::vec4(7.5, 0.0, 3.0, 1.0),
+  glm::vec4(8.0, 0.0, 3.0, 1.0),
+  glm::vec4(8.0, -8.0, -3.0, 1.0),
+  glm::vec4(7.5, -8.0, -3.0, 1.0),
+  glm::vec4(7.5, 0.0, -3.0, 1.0),
+  glm::vec4(8.0, 0.0, -3.0, 1.0)
+};
+///////////////////////Upper Box/////////////////////////////////
+glm::vec4 b_upper_front[8] = {
+  glm::vec4(-7.5, 8.0, 0.5, 1.0),
+  glm::vec4(7.5, 8.0, 0.5, 1.0),
+  glm::vec4(7.5, 0.0, 0.5, 1.0),
+  glm::vec4(-7.5, 0.0, 0.5, 1.0),
+  glm::vec4(-7.5, 8.0, 0.0, 1.0),
+  glm::vec4(7.5, 8.0, 0.0, 1.0),
+  glm::vec4(7.5, 0.0, 0.0, 1.0),
+  glm::vec4(-7.5, 0.0, 0.0, 1.0)
+};
+glm::vec4 b_upper_back[8] = {
+  glm::vec4(-7.5, 8.0, -0.5, 1.0),
+  glm::vec4(7.5, 8.0, -0.5, 1.0),
+  glm::vec4(7.5, 0.0, -0.5, 1.0),
+  glm::vec4(-7.5, 0.0, -0.5, 1.0),
+  glm::vec4(-7.5, 8.0, 0.0, 1.0),
+  glm::vec4(7.5, 8.0, 0.0, 1.0),
+  glm::vec4(7.5, 0.0, 0.0, 1.0),
+  glm::vec4(-7.5, 0.0, 0.0, 1.0)
+};
+glm::vec4 b_upper_lower[8] = {
+  glm::vec4(-8.0, 0.5, 3.0, 1.0),
+  glm::vec4(8.0, 0.5, 3.0, 1.0),
+  glm::vec4(8.0, 0.0, 3.0, 1.0),
+  glm::vec4(-8.0, 0.0, 3.0, 1.0),
+  glm::vec4(-8.0, 0.5, -3.0, 1.0),
+  glm::vec4(8.0, 0.5, -3.0, 1.0),
+  glm::vec4(8.0, 0.0, -3.0, 1.0),
+  glm::vec4(-8.0, 0.0, -3.0, 1.0)
+};
+glm::vec4 b_upper_left[8] = {
+  glm::vec4(-0.5, 8.0, 3.0, 1.0),
+  glm::vec4(0.0, 8.0, 3.0, 1.0),
+  glm::vec4(0.0, 0.0, 3.0, 1.0),
+  glm::vec4(-0.5, 0.0, 3.0, 1.0),
+  glm::vec4(-0.5, 8.0, -3.0, 1.0),
+  glm::vec4(0.0, 8.0, -3.0, 1.0),
+  glm::vec4(0.0, 0.0, -3.0, 1.0),
+  glm::vec4(-0.5, 0.0, -3.0, 1.0)
+};
+glm::vec4 b_upper_right[8] = {
+  glm::vec4(0.5, 8.0, 3.0, 1.0),
+  glm::vec4(0.0, 8.0, 3.0, 1.0),
+  glm::vec4(0.0, 0.0, 3.0, 1.0),
+  glm::vec4(0.5, 0.0, 3.0, 1.0),
+  glm::vec4(0.5, 8.0, -3.0, 1.0),
+  glm::vec4(0.0, 8.0, -3.0, 1.0),
+  glm::vec4(0.0, 0.0, -3.0, 1.0),
+  glm::vec4(0.5, 0.0, -3.0, 1.0)
+};
+/////////////////////////////////////////////////////////////
+
+
 
 void initialize_coordinates() {
   get_vec4(glm::vec4(-2*s, -s+2*s, 1.5*s, 1.0), 4*s, 2*s, 3*s, room_top);
@@ -89,6 +193,8 @@ void initialize_coordinates() {
   get_vec4(glm::vec4(-8.5, -9.0, -21.0, 1.0), 7.0, 1.0, 1.0, tv_stand);
 
   get_vec4(glm::vec4(-6.0, -15.0, -11.0, 1.0), 12.0, 1.5, 8, center_table);
+
+  get_vec4(glm::vec4(-6.0, -10.0, -11.0, 1.0), 5.0, 1.5, 8, b_lower_back);
 
 }
 
@@ -159,6 +265,43 @@ glm::vec4 v_tv_stand[num_vertices];
 
 glm::vec4 v_center_table[num_vertices];
 
+
+/******************BOX DEFINITIONS**********************/
+
+/********************ALIEN COLORS*****************************/
+
+glm::vec4 grey(0.5, 0.5, 0.5, 1.0);
+glm::vec4 brown(0.0, 0.5, 1.0, 1.0);
+glm::vec4 pastel_red(1.0, 0.4, 0.4, 1.0);
+glm::vec4 dark_red(0.545, 0.0, 0.0, 1.0);
+
+/*************************************************************/
+
+
+/*********************Lower Box***************/
+glm::vec4 v_b_lower_front[num_vertices];
+glm::vec4 v_b_lower_back[num_vertices];
+glm::vec4 v_b_lower_right[num_vertices];
+glm::vec4 v_b_lower_left[num_vertices];
+glm::vec4 v_b_lower_lower[num_vertices];
+/*********************************************/
+/*********************Upper Box***************/
+glm::vec4 v_b_upper_front[num_vertices];
+glm::vec4 v_b_upper_back[num_vertices];
+glm::vec4 v_b_upper_right[num_vertices];
+glm::vec4 v_b_upper_left[num_vertices];
+glm::vec4 v_b_upper_lower[num_vertices];
+/*********************************************/
+
+glm::vec4 v_colors_grey[num_vertices];
+glm::vec4 v_colors_red[num_vertices];
+glm::vec4 v_colors_dark_red[num_vertices];
+glm::vec4 v_colors_pastel_red[num_vertices];
+glm::vec4 v_colors_brown[num_vertices];
+
+
+
+
 glm::vec4 v_colors[num_vertices];
 glm::vec4 v_normals[num_vertices];
 glm::vec2 tex_coords[num_vertices];
@@ -181,6 +324,29 @@ void quad(int a, int b, int c, int d, glm::vec4 color)
   v_colors[tri_idx] = color;
   v_normals[tri_idx] = normals[a];
   tex_coords[tri_idx] = t_coords[1];
+
+
+    /************BOX********************************/
+  v_b_lower_front[tri_idx] = b_lower_front[ind];
+  v_b_lower_right[tri_idx] = b_lower_right[ind];
+  v_b_lower_left[tri_idx] = b_lower_left[ind];
+  v_b_lower_lower[tri_idx] = b_lower_lower[ind];
+  v_b_lower_back[tri_idx] = b_lower_back[ind];
+  v_b_upper_front[tri_idx] = b_upper_front[ind];
+  v_b_upper_right[tri_idx] = b_upper_right[ind];
+  v_b_upper_left[tri_idx] = b_upper_left[ind];
+  v_b_upper_lower[tri_idx] = b_upper_lower[ind];
+  v_b_upper_back[tri_idx] = b_upper_back[ind];
+
+  v_colors_grey[tri_idx] = grey;
+  v_colors_red[tri_idx] = red;
+  v_colors_dark_red[tri_idx] = dark_red;
+  v_colors_pastel_red[tri_idx] = pastel_red;
+  v_colors_brown[tri_idx] = brown;
+
+
+
+
   tri_idx++;
 
   ind = b;             //<-------------------------------b
@@ -199,6 +365,27 @@ void quad(int a, int b, int c, int d, glm::vec4 color)
   v_colors[tri_idx] = color;
   v_normals[tri_idx] = normals[b];
   tex_coords[tri_idx] = t_coords[0];
+
+      /************BOX********************************/
+  v_b_lower_front[tri_idx] = b_lower_front[ind];
+  v_b_lower_right[tri_idx] = b_lower_right[ind];
+  v_b_lower_left[tri_idx] = b_lower_left[ind];
+  v_b_lower_lower[tri_idx] = b_lower_lower[ind];
+  v_b_lower_back[tri_idx] = b_lower_back[ind];
+  v_b_upper_front[tri_idx] = b_upper_front[ind];
+  v_b_upper_right[tri_idx] = b_upper_right[ind];
+  v_b_upper_left[tri_idx] = b_upper_left[ind];
+  v_b_upper_lower[tri_idx] = b_upper_lower[ind];
+  v_b_upper_back[tri_idx] = b_upper_back[ind];
+
+  v_colors_grey[tri_idx] = grey;
+  v_colors_red[tri_idx] = red;
+  v_colors_dark_red[tri_idx] = dark_red;
+  v_colors_pastel_red[tri_idx] = pastel_red;
+  v_colors_brown[tri_idx] = brown;
+
+
+
   tri_idx++;
 
   ind = c;             //<-------------------------------c
@@ -217,6 +404,27 @@ void quad(int a, int b, int c, int d, glm::vec4 color)
   v_colors[tri_idx] = color;
   v_normals[tri_idx] = normals[c];
   tex_coords[tri_idx] = t_coords[2];
+
+      /************BOX********************************/
+  v_b_lower_front[tri_idx] = b_lower_front[ind];
+  v_b_lower_right[tri_idx] = b_lower_right[ind];
+  v_b_lower_left[tri_idx] = b_lower_left[ind];
+  v_b_lower_lower[tri_idx] = b_lower_lower[ind];
+  v_b_lower_back[tri_idx] = b_lower_back[ind];
+  v_b_upper_front[tri_idx] = b_upper_front[ind];
+  v_b_upper_right[tri_idx] = b_upper_right[ind];
+  v_b_upper_left[tri_idx] = b_upper_left[ind];
+  v_b_upper_lower[tri_idx] = b_upper_lower[ind];
+  v_b_upper_back[tri_idx] = b_upper_back[ind];
+
+  v_colors_grey[tri_idx] = grey;
+  v_colors_red[tri_idx] = red;
+  v_colors_dark_red[tri_idx] = dark_red;
+  v_colors_pastel_red[tri_idx] = pastel_red;
+  v_colors_brown[tri_idx] = brown;
+
+
+
   tri_idx++;
 
   ind = a;             //<-------------------------------a
@@ -235,6 +443,27 @@ void quad(int a, int b, int c, int d, glm::vec4 color)
   v_colors[tri_idx] = color;
   v_normals[tri_idx] = normals[a];
   tex_coords[tri_idx] = t_coords[1];
+
+      /************BOX********************************/
+  v_b_lower_front[tri_idx] = b_lower_front[ind];
+  v_b_lower_right[tri_idx] = b_lower_right[ind];
+  v_b_lower_left[tri_idx] = b_lower_left[ind];
+  v_b_lower_lower[tri_idx] = b_lower_lower[ind];
+  v_b_lower_back[tri_idx] = b_lower_back[ind];
+  v_b_upper_front[tri_idx] = b_upper_front[ind];
+  v_b_upper_right[tri_idx] = b_upper_right[ind];
+  v_b_upper_left[tri_idx] = b_upper_left[ind];
+  v_b_upper_lower[tri_idx] = b_upper_lower[ind];
+  v_b_upper_back[tri_idx] = b_upper_back[ind];
+
+  v_colors_grey[tri_idx] = grey;
+  v_colors_red[tri_idx] = red;
+  v_colors_dark_red[tri_idx] = dark_red;
+  v_colors_pastel_red[tri_idx] = pastel_red;
+  v_colors_brown[tri_idx] = brown;
+
+
+
   tri_idx++;
 
 
@@ -254,6 +483,27 @@ void quad(int a, int b, int c, int d, glm::vec4 color)
   v_colors[tri_idx] = color;
   v_normals[tri_idx] = normals[c];
   tex_coords[tri_idx] = t_coords[2];
+
+      /************BOX********************************/
+  v_b_lower_front[tri_idx] = b_lower_front[ind];
+  v_b_lower_right[tri_idx] = b_lower_right[ind];
+  v_b_lower_left[tri_idx] = b_lower_left[ind];
+  v_b_lower_lower[tri_idx] = b_lower_lower[ind];
+  v_b_lower_back[tri_idx] = b_lower_back[ind];
+  v_b_upper_front[tri_idx] = b_upper_front[ind];
+  v_b_upper_right[tri_idx] = b_upper_right[ind];
+  v_b_upper_left[tri_idx] = b_upper_left[ind];
+  v_b_upper_lower[tri_idx] = b_upper_lower[ind];
+  v_b_upper_back[tri_idx] = b_upper_back[ind];
+
+  v_colors_grey[tri_idx] = grey;
+  v_colors_red[tri_idx] = red;
+  v_colors_dark_red[tri_idx] = dark_red;
+  v_colors_pastel_red[tri_idx] = pastel_red;
+  v_colors_brown[tri_idx] = brown;
+
+
+
   tri_idx++;
 
   ind = d;             //<-------------------------------d
@@ -272,6 +522,27 @@ void quad(int a, int b, int c, int d, glm::vec4 color)
   v_colors[tri_idx] = color;
   v_normals[tri_idx] = normals[d];
   tex_coords[tri_idx] = t_coords[3];
+
+      /************BOX********************************/
+  v_b_lower_front[tri_idx] = b_lower_front[ind];
+  v_b_lower_right[tri_idx] = b_lower_right[ind];
+  v_b_lower_left[tri_idx] = b_lower_left[ind];
+  v_b_lower_lower[tri_idx] = b_lower_lower[ind];
+  v_b_lower_back[tri_idx] = b_lower_back[ind];
+  v_b_upper_front[tri_idx] = b_upper_front[ind];
+  v_b_upper_right[tri_idx] = b_upper_right[ind];
+  v_b_upper_left[tri_idx] = b_upper_left[ind];
+  v_b_upper_lower[tri_idx] = b_upper_lower[ind];
+  v_b_upper_back[tri_idx] = b_upper_back[ind];
+
+  v_colors_grey[tri_idx] = grey;
+  v_colors_red[tri_idx] = red;
+  v_colors_dark_red[tri_idx] = dark_red;
+  v_colors_pastel_red[tri_idx] = pastel_red;
+  v_colors_brown[tri_idx] = brown;
+
+
+
   tri_idx++;
  }
 
@@ -319,6 +590,37 @@ glVertexAttribPointer( vNormal, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(v_count 
 
 }
 
+void make_cuboid(int index, glm::vec4* v_pos, glm::vec4* tex_pos, glm::vec4* norm_pos, std::size_t v_count, std::size_t tex_count, std::size_t norm_count, GLuint vPosition, GLuint vColor, GLuint vNormal)
+{
+//Set 0 as the current array to be used by binding it
+glBindVertexArray (vao[index]);
+//Set 0 as the current buffer to be used by binding it
+glBindBuffer (GL_ARRAY_BUFFER, vbo[index]);
+
+//colorcube();
+
+//Copy the points into the current buffer
+glBufferData (GL_ARRAY_BUFFER, v_count + tex_count + norm_count, NULL, GL_STATIC_DRAW);
+glBufferSubData( GL_ARRAY_BUFFER, 0, v_count, v_pos );
+glBufferSubData( GL_ARRAY_BUFFER, v_count, tex_count, tex_pos);
+glBufferSubData( GL_ARRAY_BUFFER, tex_count + v_count, norm_count, norm_pos );
+// set up vertex array
+//Position
+glEnableVertexAttribArray( vPosition );
+glVertexAttribPointer( vPosition, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0) );
+//Textures
+glEnableVertexAttribArray( vColor );
+glVertexAttribPointer( vColor, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(v_count) );
+
+//Normal
+glEnableVertexAttribArray( vNormal );
+glVertexAttribPointer( vNormal, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(v_count + tex_count) );
+
+
+
+}
+
+
 //-----------------------------------------------------------------
 
 void initBuffersGL(void)
@@ -338,8 +640,8 @@ void initBuffersGL(void)
   glUseProgram( shaderProgram );
 
   // getting the attributes from the shader program
-  GLuint vPosition = glGetAttribLocation( shaderProgram, "vPosition" );
-  GLuint vColor = glGetAttribLocation( shaderProgram, "vColor" );
+  vPosition = glGetAttribLocation( shaderProgram, "vPosition" );
+  vColor = glGetAttribLocation( shaderProgram, "vColor" );
   GLuint vNormal = glGetAttribLocation( shaderProgram, "vNormal" );
   GLuint texCoord = glGetAttribLocation( shaderProgram, "texCoord" );
   uModelViewMatrix = glGetUniformLocation( shaderProgram, "uModelViewMatrix");
@@ -374,11 +676,22 @@ void initBuffersGL(void)
 
   make_cuboid(10, v_center_table, tex_coords, v_normals, sizeof(v_center_table), sizeof(tex_coords), sizeof(v_normals), vPosition, texCoord, vNormal);
 
+  //make_cuboid(11, v_b_lower_back, v_colors_red, v_normals, sizeof(v_b_lower_back), sizeof(v_colors_red), sizeof(v_normals), vPosition, vColor, vNormal);
+
+  //
+  b_lower_back_node = new HNode(NULL,num_vertices,v_b_lower_back,v_colors_red,sizeof(v_b_lower_back),sizeof(v_colors), "None");
+  b_lower_back_node->change_parameters(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+
+  root_node = curr_node = b_lower_back_node;
+
 }
+
 
 void renderGL(void)
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  matrixStack.clear();
 
   rotation_matrix = glm::rotate(glm::mat4(1.0f), glm::radians(xrot), glm::vec3(1.0f,0.0f,0.0f));
   rotation_matrix = glm::rotate(rotation_matrix, glm::radians(yrot), glm::vec3(0.0f,1.0f,0.0f));
@@ -414,6 +727,9 @@ void renderGL(void)
   // glDrawArrays(GL_TRIANGLES, 0, num_vertices);
   // }
 
+  matrixStack.push_back(modelview_matrix);
+
+  glUniform1f(test, 1.0);
 
   GLuint tex1 = LoadTexture("images/all.bmp",512,512);
   glBindTexture(GL_TEXTURE_2D, tex1);
@@ -465,6 +781,14 @@ void renderGL(void)
   glBindTexture(GL_TEXTURE_2D, tex7);
   glBindVertexArray (vao[10]);
   glDrawArrays(GL_TRIANGLES, 0, num_vertices);
+
+
+  glUniform1f(test, 0.4);
+
+  b_lower_back_node->render_tree();
+
+  // glBindVertexArray (vao[11]);
+  // glDrawArrays(GL_TRIANGLES, 0, num_vertices);
 
 }
 
