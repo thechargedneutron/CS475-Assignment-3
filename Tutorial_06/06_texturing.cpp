@@ -31,6 +31,8 @@ glm::mat3 normal_matrix;
 GLuint uModelViewMatrix;
 GLuint viewMatrix;
 GLuint normalMatrix;
+
+GLuint test;
 //-----------------------------------------------------------------
 
 int number_of_vao = 11;
@@ -344,6 +346,11 @@ void initBuffersGL(void)
   normalMatrix =  glGetUniformLocation( shaderProgram, "normalMatrix");
   viewMatrix = glGetUniformLocation( shaderProgram, "viewMatrix");
 
+  test = glGetUniformLocation(shaderProgram, "thresh");
+  glUniform1f(test, 1.0);
+
+
+
   // Load Textures
 
   //Ask GL for two Vertex Attribute Objects (vao) , one for the sphere and one for the wireframe
@@ -406,6 +413,8 @@ void renderGL(void)
   // glBindVertexArray (vao[u]);
   // glDrawArrays(GL_TRIANGLES, 0, num_vertices);
   // }
+
+
   GLuint tex1 = LoadTexture("images/all.bmp",512,512);
   glBindTexture(GL_TEXTURE_2D, tex1);
 
