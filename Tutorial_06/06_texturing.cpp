@@ -549,14 +549,58 @@ void quad(int a, int b, int c, int d, glm::vec4 color)
 // generate 12 triangles: 36 vertices and 36 colors
 void colorcube(void)
 {
-  quad( 1, 0, 3, 2, red);
-  quad( 2, 3, 7, 6, green);
-  quad( 3, 0, 4, 7, white);
-  quad( 6, 5, 1, 2, yellow);
-  quad( 4, 5, 6, 7, black);
-  quad( 5, 4, 0, 1, blue);
+  quad( 1, 0, 3, 2, red);  //normal   +z
+  quad( 2, 3, 7, 6, green); // normal +y
+  quad( 3, 0, 4, 7, white); // normal -x
+  quad( 6, 5, 1, 2, yellow); //normal +x
+  quad( 4, 5, 6, 7, black); //normal -z
+  quad( 5, 4, 0, 1, blue);  //normal -y
 }
 
+void setnormal(void){
+  v_normals[0] = glm::vec4(0.0, 0.0, 1.0, 1.0);
+  v_normals[1] = glm::vec4(0.0, 0.0, 1.0, 1.0);
+  v_normals[2] = glm::vec4(0.0, 0.0, 1.0, 1.0);
+  v_normals[3] = glm::vec4(0.0, 0.0, 1.0, 1.0);
+  v_normals[4] = glm::vec4(0.0, 0.0, 1.0, 1.0);
+  v_normals[5] = glm::vec4(0.0, 0.0, 1.0, 1.0);
+
+  v_normals[6] = glm::vec4(0.0, 1.0, 0.0, 1.0);
+  v_normals[7] = glm::vec4(0.0, 1.0, 0.0, 1.0);
+  v_normals[8] = glm::vec4(0.0, 1.0, 0.0, 1.0);
+  v_normals[9] = glm::vec4(0.0, 1.0, 0.0, 1.0);
+  v_normals[10] = glm::vec4(0.0, 1.0, 0.0, 1.0);
+  v_normals[11] = glm::vec4(0.0, 1.0, 0.0, 1.0);
+
+  v_normals[12] = glm::vec4(-1.0, 0.0, 0.0, 1.0);
+  v_normals[13] = glm::vec4(-1.0, 0.0, 0.0, 1.0);
+  v_normals[14] = glm::vec4(-1.0, 0.0, 0.0, 1.0);
+  v_normals[15] = glm::vec4(-1.0, 0.0, 0.0, 1.0);
+  v_normals[16] = glm::vec4(-1.0, 0.0, 0.0, 1.0);
+  v_normals[17] = glm::vec4(-1.0, 0.0, 0.0, 1.0);
+
+  v_normals[18] = glm::vec4(1.0, 0.0, 0.0, 1.0);
+  v_normals[19] = glm::vec4(1.0, 0.0, 0.0, 1.0);
+  v_normals[20] = glm::vec4(1.0, 0.0, 0.0, 1.0);
+  v_normals[21] = glm::vec4(1.0, 0.0, 0.0, 1.0);
+  v_normals[22] = glm::vec4(1.0, 0.0, 0.0, 1.0);
+  v_normals[23] = glm::vec4(1.0, 0.0, 0.0, 1.0);
+
+  v_normals[24] = glm::vec4(0.0, 0.0, -1.0, 1.0);
+  v_normals[25] = glm::vec4(0.0, 0.0, -1.0, 1.0);
+  v_normals[26] = glm::vec4(0.0, 0.0, -1.0, 1.0);
+  v_normals[27] = glm::vec4(0.0, 0.0, -1.0, 1.0);
+  v_normals[28] = glm::vec4(0.0, 0.0, -1.0, 1.0);
+  v_normals[29] = glm::vec4(0.0, 0.0, -1.0, 1.0);
+
+  v_normals[30] = glm::vec4(0.0, -1.0, 0.0, 1.0);
+  v_normals[31] = glm::vec4(0.0, -1.0, 0.0, 1.0);
+  v_normals[32] = glm::vec4(0.0, -1.0, 0.0, 1.0);
+  v_normals[33] = glm::vec4(0.0, -1.0, 0.0, 1.0);
+  v_normals[34] = glm::vec4(0.0, -1.0, 0.0, 1.0);
+  v_normals[35] = glm::vec4(0.0, -1.0, 0.0, 1.0);
+
+}
 
 
 
@@ -661,6 +705,7 @@ void initBuffersGL(void)
   glGenBuffers (number_of_vao, vbo);
 
   colorcube();
+  setnormal();
 
   make_cuboid(0, v_room_top, tex_coords, v_normals, sizeof(v_room_top), sizeof(tex_coords), sizeof(v_normals), vPosition, texCoord, vNormal);
   make_cuboid(1, v_room_bottom, tex_coords, v_normals, sizeof(v_room_bottom), sizeof(tex_coords), sizeof(v_normals), vPosition, texCoord, vNormal);
