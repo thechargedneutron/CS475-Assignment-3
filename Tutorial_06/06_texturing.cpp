@@ -686,7 +686,7 @@ void initBuffersGL(void)
   // getting the attributes from the shader program
   vPosition = glGetAttribLocation( shaderProgram, "vPosition" );
   vColor = glGetAttribLocation( shaderProgram, "vColor" );
-  GLuint vNormal = glGetAttribLocation( shaderProgram, "vNormal" );
+  vNormal = glGetAttribLocation( shaderProgram, "vNormal" );
   GLuint texCoord = glGetAttribLocation( shaderProgram, "texCoord" );
   uModelViewMatrix = glGetUniformLocation( shaderProgram, "uModelViewMatrix");
   normalMatrix =  glGetUniformLocation( shaderProgram, "normalMatrix");
@@ -724,7 +724,7 @@ void initBuffersGL(void)
   //make_cuboid(11, v_b_lower_back, v_colors_red, v_normals, sizeof(v_b_lower_back), sizeof(v_colors_red), sizeof(v_normals), vPosition, vColor, vNormal);
 
   //
-  b_lower_back_node = new HNode(NULL,num_vertices,v_b_lower_back,v_colors_red,sizeof(v_b_lower_back),sizeof(v_colors), "None");
+  b_lower_back_node = new HNode(NULL,num_vertices,v_b_lower_back,v_colors_red,v_normals, sizeof(v_b_lower_back),sizeof(v_colors), sizeof(v_normals), "None");
   b_lower_back_node->change_parameters(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
 
   root_node = curr_node = b_lower_back_node;

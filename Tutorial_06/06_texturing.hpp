@@ -23,7 +23,7 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
-GLuint vPosition, vColor;
+GLuint vPosition, vColor, vNormal;
 std::vector<glm::mat4> matrixStack;
 
 GLuint uModelViewMatrix;
@@ -51,7 +51,7 @@ class HNode {
   void update_matrices();
 
   public:
-  HNode (HNode*, GLuint, glm::vec4*,  glm::vec4*, std::size_t, std::size_t, std::string);
+  HNode (HNode*, GLuint, glm::vec4*,  glm::vec4*, glm::vec4*, std::size_t, std::size_t, std::size_t, std::string);
   HNode (HNode*, GLuint, glm::vec4*,  glm::vec4*, std::size_t, std::size_t, std::string, GLfloat, GLfloat, GLfloat, GLfloat, GLfloat, GLfloat);
   //HNode (HNode* , glm::vec4*,  glm::vec4*,GLfloat,GLfloat,GLfloat,GLfloat,GLfloat,GLfloat);
 
@@ -80,7 +80,7 @@ glm::mat4* multiply_stack(std::vector<glm::mat4> matStack){
 }
 
 
-HNode::HNode(HNode* a_parent, GLuint num_v, glm::vec4* a_vertices, glm::vec4* a_colours, std::size_t v_size, std::size_t c_size, std::string name){
+HNode::HNode(HNode* a_parent, GLuint num_v, glm::vec4* a_vertices, glm::vec4* a_colours, glm::vec4* a_normals, std::size_t v_size, std::size_t c_size, std::size_t n_size, std::string name){
 
   num_vertices = num_v;
   vertex_buffer_size = v_size;
@@ -108,9 +108,10 @@ HNode::HNode(HNode* a_parent, GLuint num_v, glm::vec4* a_vertices, glm::vec4* a_
   glBindBuffer (GL_ARRAY_BUFFER, vbo);
 
 
-  glBufferData (GL_ARRAY_BUFFER, vertex_buffer_size + color_buffer_size, NULL, GL_STATIC_DRAW);
+  glBufferData (GL_ARRAY_BUFFER, vertex_buffer_size + color_buffer_size + n_size, NULL, GL_STATIC_DRAW);
   glBufferSubData( GL_ARRAY_BUFFER, 0, vertex_buffer_size, a_vertices );
   glBufferSubData( GL_ARRAY_BUFFER, vertex_buffer_size, color_buffer_size, a_colours );
+  glBufferSubData( GL_ARRAY_BUFFER, color_buffer_size + vertex_buffer_size, n_size, a_normals );
 
   //setup the vertex array as per the shader
   glEnableVertexAttribArray( vPosition );
@@ -118,6 +119,9 @@ HNode::HNode(HNode* a_parent, GLuint num_v, glm::vec4* a_vertices, glm::vec4* a_
 
   glEnableVertexAttribArray( vColor );
   glVertexAttribPointer( vColor, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(vertex_buffer_size));
+
+  glEnableVertexAttribArray( vNormal );
+  glVertexAttribPointer( vNormal, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(vertex_buffer_size + color_buffer_size));
 
 
   // set parent
