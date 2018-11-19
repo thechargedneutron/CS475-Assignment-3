@@ -34,8 +34,8 @@ GLuint normalMatrix;
 GLuint test;
 //-----------------------------------------------------------------
 
-int number_of_vao = 12;
-GLuint vbo[12], vao[12];
+int number_of_vao = 20;
+GLuint vbo[20], vao[20];
 
 //6 faces, 2 triangles/face, 3 vertices/triangle
 const int num_vertices = 36;
@@ -73,6 +73,11 @@ glm::vec4 tv_screen[8];
 glm::vec4 tv_stand[8];
 
 glm::vec4 center_table[8];
+
+glm::vec4 wall_light_top[8];
+glm::vec4 wall_light_left[8];
+glm::vec4 wall_light_right[8];
+glm::vec4 wall_light_front[8];
 
 ///////////////////////Lower Box/////////////////////////////////
 glm::vec4 b_lower_front[8] = {
@@ -194,6 +199,11 @@ void initialize_coordinates() {
 
   get_vec4(glm::vec4(-6.0, -15.0, -11.0, 1.0), 12.0, 1.5, 8, center_table);
 
+  get_vec4(glm::vec4(-2.0, 10.0, -21.0, 1.0), 4.0, 1.0, 3.0, wall_light_top);
+  get_vec4(glm::vec4(-3.0, 7.0, -20.0, 1.0), 1.0, 4.0, 4.0, wall_light_left);
+  get_vec4(glm::vec4(2.0, 7.0, -20.0, 1.0), 1.0, 4.0, 4.0, wall_light_right);
+  get_vec4(glm::vec4(-2.0, 7.0, -20.0, 1.0), 4.0, 4.0, 1.0, wall_light_front);
+
   get_vec4(glm::vec4(-6.0, -10.0, -11.0, 1.0), 5.0, 1.5, 8, b_lower_back);
 
 }
@@ -211,16 +221,7 @@ glm::vec4 bookshelf[8] = {
 };
 
 
-glm::vec4 normals[8] = {
-  glm::vec4(-0.5, -0.5, 0.5, 1.0),
-  glm::vec4(-0.5, 0.5, 0.5, 1.0),
-  glm::vec4(0.5, 0.5, 0.5, 1.0),
-  glm::vec4(0.5, -0.5, 0.5, 1.0),
-  glm::vec4(-0.5, -0.5, -0.5, 1.0),
-   glm::vec4(-0.5, 0.5, -0.5, 1.0),
-  glm::vec4(0.5, 0.5, -0.5, 1.0),
-  glm::vec4(0.5, -0.5, -0.5, 1.0)
-};
+glm::vec4 normals[8];
 //RGBA colors
 glm::vec4 colors[8] = {
   glm::vec4(0.0, 0.0, 0.0, 1.0),
@@ -264,6 +265,11 @@ glm::vec4 v_tv_screen[num_vertices];
 glm::vec4 v_tv_stand[num_vertices];
 
 glm::vec4 v_center_table[num_vertices];
+
+glm::vec4 v_wall_light_top[num_vertices];
+glm::vec4 v_wall_light_left[num_vertices];
+glm::vec4 v_wall_light_right[num_vertices];
+glm::vec4 v_wall_light_front[num_vertices];
 
 
 /******************BOX DEFINITIONS**********************/
@@ -321,8 +327,12 @@ void quad(int a, int b, int c, int d, glm::vec4 color)
   v_tv_stand[tri_idx] = tv_stand[ind];
   v_center_table[tri_idx] = center_table[ind];
 
+  v_wall_light_top[tri_idx] = wall_light_top[ind];
+  v_wall_light_left[tri_idx] = wall_light_left[ind];
+  v_wall_light_right[tri_idx] = wall_light_right[ind];
+  v_wall_light_front[tri_idx] = wall_light_front[ind];
+
   v_colors[tri_idx] = color;
-  v_normals[tri_idx] = normals[a];
   tex_coords[tri_idx] = t_coords[1];
 
 
@@ -362,8 +372,12 @@ void quad(int a, int b, int c, int d, glm::vec4 color)
   v_tv_stand[tri_idx] = tv_stand[ind];
   v_center_table[tri_idx] = center_table[ind];
 
+  v_wall_light_top[tri_idx] = wall_light_top[ind];
+  v_wall_light_left[tri_idx] = wall_light_left[ind];
+  v_wall_light_right[tri_idx] = wall_light_right[ind];
+  v_wall_light_front[tri_idx] = wall_light_front[ind];
+
   v_colors[tri_idx] = color;
-  v_normals[tri_idx] = normals[b];
   tex_coords[tri_idx] = t_coords[0];
 
       /************BOX********************************/
@@ -401,8 +415,12 @@ void quad(int a, int b, int c, int d, glm::vec4 color)
   v_tv_stand[tri_idx] = tv_stand[ind];
   v_center_table[tri_idx] = center_table[ind];
 
+  v_wall_light_top[tri_idx] = wall_light_top[ind];
+  v_wall_light_left[tri_idx] = wall_light_left[ind];
+  v_wall_light_right[tri_idx] = wall_light_right[ind];
+  v_wall_light_front[tri_idx] = wall_light_front[ind];
+
   v_colors[tri_idx] = color;
-  v_normals[tri_idx] = normals[c];
   tex_coords[tri_idx] = t_coords[2];
 
       /************BOX********************************/
@@ -440,8 +458,12 @@ void quad(int a, int b, int c, int d, glm::vec4 color)
   v_tv_stand[tri_idx] = tv_stand[ind];
   v_center_table[tri_idx] = center_table[ind];
 
+  v_wall_light_top[tri_idx] = wall_light_top[ind];
+  v_wall_light_left[tri_idx] = wall_light_left[ind];
+  v_wall_light_right[tri_idx] = wall_light_right[ind];
+  v_wall_light_front[tri_idx] = wall_light_front[ind];
+
   v_colors[tri_idx] = color;
-  v_normals[tri_idx] = normals[a];
   tex_coords[tri_idx] = t_coords[1];
 
       /************BOX********************************/
@@ -480,8 +502,12 @@ void quad(int a, int b, int c, int d, glm::vec4 color)
   v_tv_stand[tri_idx] = tv_stand[ind];
   v_center_table[tri_idx] = center_table[ind];
 
+  v_wall_light_top[tri_idx] = wall_light_top[ind];
+  v_wall_light_left[tri_idx] = wall_light_left[ind];
+  v_wall_light_right[tri_idx] = wall_light_right[ind];
+  v_wall_light_front[tri_idx] = wall_light_front[ind];
+
   v_colors[tri_idx] = color;
-  v_normals[tri_idx] = normals[c];
   tex_coords[tri_idx] = t_coords[2];
 
       /************BOX********************************/
@@ -519,8 +545,12 @@ void quad(int a, int b, int c, int d, glm::vec4 color)
   v_tv_stand[tri_idx] = tv_stand[ind];
   v_center_table[tri_idx] = center_table[ind];
 
+  v_wall_light_top[tri_idx] = wall_light_top[ind];
+  v_wall_light_left[tri_idx] = wall_light_left[ind];
+  v_wall_light_right[tri_idx] = wall_light_right[ind];
+  v_wall_light_front[tri_idx] = wall_light_front[ind];
+
   v_colors[tri_idx] = color;
-  v_normals[tri_idx] = normals[d];
   tex_coords[tri_idx] = t_coords[3];
 
       /************BOX********************************/
@@ -721,6 +751,12 @@ void initBuffersGL(void)
 
   make_cuboid(10, v_center_table, tex_coords, v_normals, sizeof(v_center_table), sizeof(tex_coords), sizeof(v_normals), vPosition, texCoord, vNormal);
 
+
+  make_cuboid(11, v_wall_light_top, tex_coords, v_normals, sizeof(v_wall_light_top), sizeof(tex_coords), sizeof(v_normals), vPosition, texCoord, vNormal);
+  make_cuboid(12, v_wall_light_left, tex_coords, v_normals, sizeof(v_wall_light_left), sizeof(tex_coords), sizeof(v_normals), vPosition, texCoord, vNormal);
+  make_cuboid(13, v_wall_light_right, tex_coords, v_normals, sizeof(v_wall_light_right), sizeof(tex_coords), sizeof(v_normals), vPosition, texCoord, vNormal);
+  make_cuboid(14, v_wall_light_front, tex_coords, v_normals, sizeof(v_wall_light_front), sizeof(tex_coords), sizeof(v_normals), vPosition, texCoord, vNormal);
+
   //make_cuboid(11, v_b_lower_back, v_colors_red, v_normals, sizeof(v_b_lower_back), sizeof(v_colors_red), sizeof(v_normals), vPosition, vColor, vNormal);
 
   //
@@ -825,6 +861,18 @@ void renderGL(void)
   GLuint tex7 = LoadTexture("images/ss.bmp",600, 400);
   glBindTexture(GL_TEXTURE_2D, tex7);
   glBindVertexArray (vao[10]);
+  glDrawArrays(GL_TRIANGLES, 0, num_vertices);
+
+  glBindVertexArray (vao[11]);
+  glDrawArrays(GL_TRIANGLES, 0, num_vertices);
+
+  glBindVertexArray (vao[12]);
+  glDrawArrays(GL_TRIANGLES, 0, num_vertices);
+
+  glBindVertexArray (vao[13]);
+  glDrawArrays(GL_TRIANGLES, 0, num_vertices);
+
+  glBindVertexArray (vao[14]);
   glDrawArrays(GL_TRIANGLES, 0, num_vertices);
 
 

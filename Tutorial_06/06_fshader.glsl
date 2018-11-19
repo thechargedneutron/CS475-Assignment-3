@@ -16,10 +16,10 @@ uniform sampler2D texture;
 void main ()
 {
     // Defining Materials
-    vec4 diffuse = vec4(0.5, 0.0, 0.0, 1.0);
-    vec4 ambient = vec4(0.1, 0.0, 0.0, 1.0);
+    vec4 diffuse = vec4(0.5, 0.5, 0.5, 1.0);
+    vec4 ambient = vec4(0.1, 0.1, 0.1, 1.0);
     vec4 specular = vec4(1.0, 0.5, 0.5, 1.0);
-    float shininess = 10.0;
+    float shininess = 0.05;
     vec4 spec = vec4(0.0);
 
     //Defining Light
@@ -30,7 +30,7 @@ void main ()
     //Diffuse
     vec3 n = normalize(vec3(normal));
     float dotProduct = dot(n, lightDir);
-    float intensity =  max( dotProduct, 0.0);
+    float intensity =  max(dotProduct, 0.0);
 
     // Compute specular component only if light falls on vertex
     if(intensity > 0.0)
@@ -42,9 +42,11 @@ void main ()
     }
 
     if(thresh > 0.5){
+        frag_color = texture2D(texture, TEX);
       frag_color = max((intensity * diffuse + spec) * texture2D(texture, TEX), ambient);
       }
     else {
+        frag_color = COLOR;
       frag_color = max((intensity * diffuse + spec) * COLOR, ambient);
       }
 }
