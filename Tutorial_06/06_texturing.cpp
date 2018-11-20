@@ -31,6 +31,10 @@ glm::mat3 normal_matrix;
 GLuint viewMatrix;
 GLuint normalMatrix;
 
+std::vector<float> bezier_x;
+std::vector<float> bezier_y;
+std::vector<float> bezier_z;
+
 GLuint test;
 //-----------------------------------------------------------------
 
@@ -78,6 +82,8 @@ glm::vec4 wall_light_top[8];
 glm::vec4 wall_light_left[8];
 glm::vec4 wall_light_right[8];
 glm::vec4 wall_light_front[8];
+
+glm::vec4 camera_pointer[8];
 
 ///////////////////////Lower Box/////////////////////////////////
 glm::vec4 b_lower_front[8] = {
@@ -206,6 +212,8 @@ void initialize_coordinates() {
 
   get_vec4(glm::vec4(-6.0, -10.0, -11.0, 1.0), 5.0, 1.5, 8, b_lower_back);
 
+  get_vec4(glm::vec4(-0.4, -0.4, 0.4, 1), 0.8, 0.8, 0.8, camera_pointer);
+
 }
 
 
@@ -271,6 +279,8 @@ glm::vec4 v_wall_light_left[num_vertices];
 glm::vec4 v_wall_light_right[num_vertices];
 glm::vec4 v_wall_light_front[num_vertices];
 
+glm::vec4 v_camera_pointer[num_vertices];
+
 
 /******************BOX DEFINITIONS**********************/
 
@@ -332,6 +342,8 @@ void quad(int a, int b, int c, int d, glm::vec4 color)
   v_wall_light_right[tri_idx] = wall_light_right[ind];
   v_wall_light_front[tri_idx] = wall_light_front[ind];
 
+  v_camera_pointer[tri_idx] = camera_pointer[ind];
+
   v_colors[tri_idx] = color;
   tex_coords[tri_idx] = t_coords[1];
 
@@ -377,6 +389,8 @@ void quad(int a, int b, int c, int d, glm::vec4 color)
   v_wall_light_right[tri_idx] = wall_light_right[ind];
   v_wall_light_front[tri_idx] = wall_light_front[ind];
 
+  v_camera_pointer[tri_idx] = camera_pointer[ind];
+
   v_colors[tri_idx] = color;
   tex_coords[tri_idx] = t_coords[0];
 
@@ -420,6 +434,8 @@ void quad(int a, int b, int c, int d, glm::vec4 color)
   v_wall_light_right[tri_idx] = wall_light_right[ind];
   v_wall_light_front[tri_idx] = wall_light_front[ind];
 
+  v_camera_pointer[tri_idx] = camera_pointer[ind];
+
   v_colors[tri_idx] = color;
   tex_coords[tri_idx] = t_coords[2];
 
@@ -462,6 +478,8 @@ void quad(int a, int b, int c, int d, glm::vec4 color)
   v_wall_light_left[tri_idx] = wall_light_left[ind];
   v_wall_light_right[tri_idx] = wall_light_right[ind];
   v_wall_light_front[tri_idx] = wall_light_front[ind];
+
+  v_camera_pointer[tri_idx] = camera_pointer[ind];
 
   v_colors[tri_idx] = color;
   tex_coords[tri_idx] = t_coords[1];
@@ -507,6 +525,8 @@ void quad(int a, int b, int c, int d, glm::vec4 color)
   v_wall_light_right[tri_idx] = wall_light_right[ind];
   v_wall_light_front[tri_idx] = wall_light_front[ind];
 
+  v_camera_pointer[tri_idx] = camera_pointer[ind];
+
   v_colors[tri_idx] = color;
   tex_coords[tri_idx] = t_coords[2];
 
@@ -549,6 +569,8 @@ void quad(int a, int b, int c, int d, glm::vec4 color)
   v_wall_light_left[tri_idx] = wall_light_left[ind];
   v_wall_light_right[tri_idx] = wall_light_right[ind];
   v_wall_light_front[tri_idx] = wall_light_front[ind];
+
+  v_camera_pointer[tri_idx] = camera_pointer[ind];
 
   v_colors[tri_idx] = color;
   tex_coords[tri_idx] = t_coords[3];
@@ -658,7 +680,7 @@ glVertexAttribPointer( texCoord, 2, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(v_count
 
 //Normal
 glEnableVertexAttribArray( vNormal );
-glVertexAttribPointer( vNormal, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(v_count + tex_count) );
+glVertexAttribPointer( vNormal, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(v_count + tex_count) );
 
 
 
@@ -688,7 +710,7 @@ glVertexAttribPointer( vColor, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(v_count) 
 
 //Normal
 glEnableVertexAttribArray( vNormal );
-glVertexAttribPointer( vNormal, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(v_count + tex_count) );
+glVertexAttribPointer( vNormal, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(v_count + tex_count) );
 
 
 
@@ -761,9 +783,16 @@ void initBuffersGL(void)
 
   //
   b_lower_back_node = new HNode(NULL,num_vertices,v_b_lower_back,v_colors_red,v_normals, sizeof(v_b_lower_back),sizeof(v_colors), sizeof(v_normals), "None");
-  b_lower_back_node->change_parameters(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+  b_lower_front_node = new HNode(b_lower_back_node,num_vertices,v_b_lower_back,v_colors_pastel_red,v_normals, sizeof(v_b_lower_back),sizeof(v_colors_pastel_red), sizeof(v_normals), "None");
 
-  root_node = curr_node = b_lower_back_node;
+  camera_pointer_node = new HNode(NULL, num_vertices, v_camera_pointer, v_colors_dark_red, v_normals, sizeof(v_camera_pointer), sizeof(v_colors_dark_red), sizeof(v_normals), "None");
+
+  b_lower_back_node->change_parameters(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+  b_lower_front_node->change_parameters(7.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+
+  camera_pointer_node->change_parameters(0.0, 12.0, -12.0, 0.0, 0.0, 0.0);
+
+  root_node = curr_node = camera_pointer_node;
 
 }
 
@@ -773,6 +802,15 @@ void renderGL(void)
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   matrixStack.clear();
+
+  if (move_left){
+    curr_node->dec_ry();
+    move_left=false;
+  }
+  if (mouse_clicked){
+    mouse_clicked=false;
+    camera_pointer_node->change_parameters(move_pointer[0], move_pointer[1], move_pointer[2], 0.0, 0.0, 0.0);
+  }
 
   rotation_matrix = glm::rotate(glm::mat4(1.0f), glm::radians(xrot), glm::vec3(1.0f,0.0f,0.0f));
   rotation_matrix = glm::rotate(rotation_matrix, glm::radians(yrot), glm::vec3(0.0f,1.0f,0.0f));
@@ -818,8 +856,8 @@ void renderGL(void)
   glBindVertexArray (vao[0]);
   glDrawArrays(GL_TRIANGLES, 0, num_vertices);
 
-  GLuint tex2 = LoadTexture("images/floor_tile.bmp",3000,2160);
-  glBindTexture(GL_TEXTURE_2D, tex2);
+  //GLuint tex2 = LoadTexture("images/floor_tile.bmp",3000,2160);
+  //glBindTexture(GL_TEXTURE_2D, tex2);
 
   glBindVertexArray (vao[1]);
   glDrawArrays(GL_TRIANGLES, 0, num_vertices);
@@ -879,6 +917,7 @@ void renderGL(void)
   glUniform1f(test, 0.4);
 
   b_lower_back_node->render_tree();
+  camera_pointer_node->render_tree();
 
   // glBindVertexArray (vao[11]);
   // glDrawArrays(GL_TRIANGLES, 0, num_vertices);
@@ -926,6 +965,8 @@ int main(int argc, char** argv)
     }
   //Keyboard Callback
   glfwSetKeyCallback(window, csX75::key_callback);
+  //Mouse Callback
+  glfwSetMouseButtonCallback(window, csX75::mouse_button_callback);
   //Framebuffer resize callback
   glfwSetFramebufferSizeCallback(window, csX75::framebuffer_size_callback);
 

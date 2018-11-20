@@ -22,6 +22,7 @@
 #include "glm/mat4x4.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
+#include <vector>
 
 GLuint vPosition, vColor, vNormal;
 std::vector<glm::mat4> matrixStack;
@@ -58,6 +59,7 @@ class HNode {
   void add_child(HNode*);
   void render();
   void change_parameters(GLfloat,GLfloat,GLfloat,GLfloat,GLfloat,GLfloat);
+  void add_parameters(GLfloat,GLfloat,GLfloat,GLfloat,GLfloat,GLfloat);
   void render_tree();
   void inc_rx();
   void inc_ry();
@@ -121,7 +123,7 @@ HNode::HNode(HNode* a_parent, GLuint num_v, glm::vec4* a_vertices, glm::vec4* a_
   glVertexAttribPointer( vColor, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(vertex_buffer_size));
 
   glEnableVertexAttribArray( vNormal );
-  glVertexAttribPointer( vNormal, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(vertex_buffer_size + color_buffer_size));
+  glVertexAttribPointer( vNormal, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(vertex_buffer_size + color_buffer_size));
 
 
   // set parent
@@ -227,6 +229,17 @@ void HNode::change_parameters(GLfloat atx, GLfloat aty, GLfloat atz, GLfloat arx
   update_matrices();
 }
 
+void HNode::add_parameters(GLfloat atx, GLfloat aty, GLfloat atz, GLfloat arx, GLfloat ary, GLfloat arz){
+  tx += atx;
+  ty += aty;
+  tz += atz;
+  rx += arx;
+  ry += ary;
+  rz += arz;
+
+  update_matrices();
+}
+
 void HNode::render(){
 
   //matrixStack multiply
@@ -285,6 +298,8 @@ void HNode::dec_rx(){
 }
 
 void HNode::dec_ry(){
+  ry--;
+  update_matrices();
   if (ry > min_ry){
   ry--;
   update_matrices();
@@ -319,6 +334,9 @@ bool enable_culling=true;
 bool solid=true;
 //Enable/Disable perspective view
 bool enable_perspective=false;
+bool move_left=false;
+bool mouse_clicked=false;
+glm::vec3 move_pointer;
 
 //-----------BOX-----------------------------
 HNode* root_node;
@@ -333,6 +351,8 @@ HNode* b_upper_lower_node;
 HNode* b_upper_right_node;
 HNode* b_upper_left_node;
 HNode* b_upper_back_node;
+
+HNode* camera_pointer_node;
 //-------------------------------------------------------------------------
 
 

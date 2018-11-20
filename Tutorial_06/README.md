@@ -3,7 +3,13 @@
 <br>
 <br>
 
-## About
+## Changes To Note
+
+1. HNode constructor. Notice the change in parameters.
+
+2. Added a function adds_paramter similar to change_parameter for translation.
+
+3. Notice change in left arrow key callback. A boolean variable is taken from main as extern and updated when the key is called. The corresponding action is defined in main code. Ctrl+F to look for it in main code.
 
 The code is very similar to most of the tutorials before, you can run the code simply by running 
 

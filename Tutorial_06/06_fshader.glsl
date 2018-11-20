@@ -8,6 +8,7 @@ in vec4 eye;
 uniform float thresh;
 
 uniform mat4 viewMatrix;
+uniform mat4 uModelViewMatrix;
 
 out vec4 frag_color;
 
@@ -18,12 +19,12 @@ void main ()
     // Defining Materials
     vec4 diffuse = vec4(0.5, 0.5, 0.5, 1.0);
     vec4 ambient = vec4(0.1, 0.1, 0.1, 1.0);
-    vec4 specular = vec4(1.0, 0.5, 0.5, 1.0);
+    vec4 specular = vec4(0.5, 0.5, 0.5, 1.0);
     float shininess = 0.05;
-    vec4 spec = vec4(0.0);
+    vec4 spec = vec4(1.0);
 
     //Defining Light
-    vec4 lightPos = vec4(1.0, 1.0, 1.0, 0.0);
+    vec4 lightPos = vec4(1.0, 3.0, -25.0, 1.0);
     vec3 lightDir = vec3(viewMatrix * lightPos);
     lightDir = normalize(vec3(lightDir));
 
@@ -44,6 +45,7 @@ void main ()
     if(thresh > 0.5){
         frag_color = texture2D(texture, TEX);
       frag_color = max((intensity * diffuse + spec) * texture2D(texture, TEX), ambient);
+      frag_color = (intensity*diffuse + spec + ambient) * texture2D(texture, TEX);
       }
     else {
         frag_color = COLOR;

@@ -4,6 +4,14 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include <vector>
+#include "glm/vec3.hpp"
+#include "glm/vec4.hpp"
+#include "glm/mat4x4.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtc/type_ptr.hpp"
+
+
 #include <iostream>
 
 // Define a helpful macro for handling offsets into buffer objects
@@ -20,6 +28,7 @@ namespace csX75
   void framebuffer_size_callback(GLFWwindow* window, int width, int height);
   //!GLFW keyboard callback
   void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+  void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 };
 
 #endif
