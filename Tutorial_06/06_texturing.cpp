@@ -86,108 +86,17 @@ glm::vec4 wall_light_front[8];
 glm::vec4 camera_pointer[8];
 
 ///////////////////////Lower Box/////////////////////////////////
-glm::vec4 b_lower_front[8] = {
-  glm::vec4(-7.5, -8.0, 3.0, 1.0),
-  glm::vec4(7.5, -8.0, 3.0, 1.0),
-  glm::vec4(7.5, 0.0, 3.0, 1.0),
-  glm::vec4(-7.5, 0.0, 3.0, 1.0),
-  glm::vec4(-7.5, -8.0, 2.5, 1.0),
-  glm::vec4(7.5, -8.0, 2.5, 1.0),
-  glm::vec4(7.5, 0.0, 2.5, 1.0),
-  glm::vec4(-7.5, 0.0, 2.5, 1.0)
-};
-glm::vec4 b_lower_back[8] = {
-  glm::vec4(-7.5, -8.0, -3.0, 1.0),
-  glm::vec4(7.5, -8.0, -3.0, 1.0),
-  glm::vec4(7.5, 0.0, -3.0, 1.0),
-  glm::vec4(-7.5, 0.0, -3.0, 1.0),
-  glm::vec4(-7.5, -8.0, -2.5, 1.0),
-  glm::vec4(7.5, -8.0, -2.5, 1.0),
-  glm::vec4(7.5, 0.0, -2.5, 1.0),
-  glm::vec4(-7.5, 0.0, -2.5, 1.0)
-};
-glm::vec4 b_lower_lower[8] = {
-  glm::vec4(-7.5, -8.0, 2.5, 1.0),
-  glm::vec4(7.5, -8.0, 2.5, 1.0),
-  glm::vec4(7.5, -7.5, 2.5, 1.0),
-  glm::vec4(-7.5, -7.5, 2.5, 1.0),
-  glm::vec4(-7.5, -8.0, -2.5, 1.0),
-  glm::vec4(7.5, -8.0, -2.5, 1.0),
-  glm::vec4(7.5, -7.5, -2.5, 1.0),
-  glm::vec4(-7.5, -7.5, -2.5, 1.0)
-};
-glm::vec4 b_lower_left[8] = {
-  glm::vec4(-8.0, -8.0, 3.0, 1.0),
-  glm::vec4(-7.5, -8.0, 3.0, 1.0),
-  glm::vec4(-7.5, 0.0, 3.0, 1.0),
-  glm::vec4(-8.0, 0.0, 3.0, 1.0),
-  glm::vec4(-8.0, -8.0, -3.0, 1.0),
-  glm::vec4(-7.5, -8.0, -3.0, 1.0),
-  glm::vec4(-7.5, 0.0, -3.0, 1.0),
-  glm::vec4(-8.0, 0.0, -3.0, 1.0)
-};
-glm::vec4 b_lower_right[8] = {
-  glm::vec4(8.0, -8.0, 3.0, 1.0),
-  glm::vec4(7.5, -8.0, 3.0, 1.0),
-  glm::vec4(7.5, 0.0, 3.0, 1.0),
-  glm::vec4(8.0, 0.0, 3.0, 1.0),
-  glm::vec4(8.0, -8.0, -3.0, 1.0),
-  glm::vec4(7.5, -8.0, -3.0, 1.0),
-  glm::vec4(7.5, 0.0, -3.0, 1.0),
-  glm::vec4(8.0, 0.0, -3.0, 1.0)
-};
+glm::vec4 b_lower_front[8] = {};
+glm::vec4 b_lower_back[8] = {};
+glm::vec4 b_lower_lower[8] = {};
+glm::vec4 b_lower_left[8] = {};
+glm::vec4 b_lower_right[8] = {};
 ///////////////////////Upper Box/////////////////////////////////
-glm::vec4 b_upper_front[8] = {
-  glm::vec4(-7.5, 8.0, 0.5, 1.0),
-  glm::vec4(7.5, 8.0, 0.5, 1.0),
-  glm::vec4(7.5, 0.0, 0.5, 1.0),
-  glm::vec4(-7.5, 0.0, 0.5, 1.0),
-  glm::vec4(-7.5, 8.0, 0.0, 1.0),
-  glm::vec4(7.5, 8.0, 0.0, 1.0),
-  glm::vec4(7.5, 0.0, 0.0, 1.0),
-  glm::vec4(-7.5, 0.0, 0.0, 1.0)
-};
-glm::vec4 b_upper_back[8] = {
-  glm::vec4(-7.5, 8.0, -0.5, 1.0),
-  glm::vec4(7.5, 8.0, -0.5, 1.0),
-  glm::vec4(7.5, 0.0, -0.5, 1.0),
-  glm::vec4(-7.5, 0.0, -0.5, 1.0),
-  glm::vec4(-7.5, 8.0, 0.0, 1.0),
-  glm::vec4(7.5, 8.0, 0.0, 1.0),
-  glm::vec4(7.5, 0.0, 0.0, 1.0),
-  glm::vec4(-7.5, 0.0, 0.0, 1.0)
-};
-glm::vec4 b_upper_lower[8] = {
-  glm::vec4(-8.0, 0.5, 3.0, 1.0),
-  glm::vec4(8.0, 0.5, 3.0, 1.0),
-  glm::vec4(8.0, 0.0, 3.0, 1.0),
-  glm::vec4(-8.0, 0.0, 3.0, 1.0),
-  glm::vec4(-8.0, 0.5, -3.0, 1.0),
-  glm::vec4(8.0, 0.5, -3.0, 1.0),
-  glm::vec4(8.0, 0.0, -3.0, 1.0),
-  glm::vec4(-8.0, 0.0, -3.0, 1.0)
-};
-glm::vec4 b_upper_left[8] = {
-  glm::vec4(-0.5, 8.0, 3.0, 1.0),
-  glm::vec4(0.0, 8.0, 3.0, 1.0),
-  glm::vec4(0.0, 0.0, 3.0, 1.0),
-  glm::vec4(-0.5, 0.0, 3.0, 1.0),
-  glm::vec4(-0.5, 8.0, -3.0, 1.0),
-  glm::vec4(0.0, 8.0, -3.0, 1.0),
-  glm::vec4(0.0, 0.0, -3.0, 1.0),
-  glm::vec4(-0.5, 0.0, -3.0, 1.0)
-};
-glm::vec4 b_upper_right[8] = {
-  glm::vec4(0.5, 8.0, 3.0, 1.0),
-  glm::vec4(0.0, 8.0, 3.0, 1.0),
-  glm::vec4(0.0, 0.0, 3.0, 1.0),
-  glm::vec4(0.5, 0.0, 3.0, 1.0),
-  glm::vec4(0.5, 8.0, -3.0, 1.0),
-  glm::vec4(0.0, 8.0, -3.0, 1.0),
-  glm::vec4(0.0, 0.0, -3.0, 1.0),
-  glm::vec4(0.5, 0.0, -3.0, 1.0)
-};
-/////////////////////////////////////////////////////////////
+glm::vec4 b_upper_front[8] = {};
+glm::vec4 b_upper_back[8] = {};
+glm::vec4 b_upper_lower[8] = {};
+glm::vec4 b_upper_left[8] = {};
+glm::vec4 b_upper_right[8] = {};
 
 
 
@@ -210,8 +119,19 @@ void initialize_coordinates() {
   get_vec4(glm::vec4(2.0, 7.0, -20.0, 1.0), 1.0, 4.0, 4.0, wall_light_right);
   get_vec4(glm::vec4(-2.0, 7.0, -20.0, 1.0), 4.0, 4.0, 1.0, wall_light_front);
 
+  //Box
   get_vec4(glm::vec4(-6.0, -10.0, -11.0, 1.0), 5.0, 1.5, 8, b_lower_back);
-
+  get_vec4(glm::vec4(-10.0, -10.0, -11.0, 1.0), 4.0, 0.25, 3, b_lower_lower);
+  get_vec4(glm::vec4(-10.0, -9.75, -11.0, 1.0), 0.25, 3, 3, b_lower_left);
+  get_vec4(glm::vec4(-6.25, -9.75, -11.0, 1.0), 0.25, 3, 3, b_lower_right);
+  get_vec4(glm::vec4(-10.0, -10.0, -14.0, 1.0), 4.0, 3, 0.25, b_lower_back);
+  get_vec4(glm::vec4(-10.0, -10.0, -10.75, 1.0), 4.0, 3, 0.25, b_lower_front);
+  get_vec4(glm::vec4(-10.0, -6.75, -11.0, 1.0), 0.25, 3, 3, b_upper_left);
+  get_vec4(glm::vec4(-6.25, -6.75, -11.0, 1.0), 0.25, 3, 3, b_upper_right);
+  get_vec4(glm::vec4(-10.0, -7.0, -14.0, 1.0), 4.0, 3.50, 0.25, b_upper_back);
+  get_vec4(glm::vec4(-10.0, -3.75, -11.0, 1.0), 4.0, 0.25, 3, b_upper_lower);
+  get_vec4(glm::vec4(-10.0, -7.0, -10.75, 1.0), 4.0, 3.5, 0.25, b_upper_front);
+  
   get_vec4(glm::vec4(-0.4, -0.4, 0.4, 1), 0.8, 0.8, 0.8, camera_pointer);
 
 }
@@ -790,9 +710,20 @@ void initBuffersGL(void)
   b_lower_back_node->change_parameters(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
   b_lower_front_node->change_parameters(7.0, 0.0, 0.0, 0.0, 0.0, 0.0);
 
+  b_lower_back_node = new HNode(NULL,num_vertices,v_b_lower_back,v_colors_brown,v_normals,sizeof(v_b_lower_left),sizeof(v_colors),sizeof(v_normals), "None");
+  b_lower_lower_node = new HNode(b_lower_back_node,num_vertices,v_b_lower_lower,v_normals,v_colors_red,sizeof(v_b_lower_lower),sizeof(v_colors),sizeof(v_normals), "None");
+  b_lower_left_node = new HNode(b_lower_back_node,num_vertices,v_b_lower_left,v_normals,v_colors_grey,sizeof(v_b_lower_left),sizeof(v_colors),sizeof(v_normals), "None");
+  b_lower_right_node = new HNode(b_lower_back_node,num_vertices,v_b_lower_right,v_colors_grey,v_normals,sizeof(v_b_lower_left),sizeof(v_colors),sizeof(v_normals), "None");
+  b_lower_front_node = new HNode(b_lower_back_node,num_vertices,v_b_lower_front,v_colors_brown,v_normals,sizeof(v_b_lower_left),sizeof(v_colors),sizeof(v_normals), "None");
+  b_upper_back_node = new HNode(b_lower_back_node,num_vertices,v_b_upper_back,v_colors_red,v_normals,sizeof(v_b_upper_left),sizeof(v_colors),sizeof(v_normals), "None");
+  b_upper_left_node = new HNode(b_upper_back_node,num_vertices,v_b_upper_left,v_colors_brown,v_normals,sizeof(v_b_upper_left),sizeof(v_colors),sizeof(v_normals), "None");
+  b_upper_right_node = new HNode(b_upper_back_node,num_vertices,v_b_upper_right,v_colors_red,v_normals,sizeof(v_b_upper_left),sizeof(v_colors),sizeof(v_normals), "None");
+  b_upper_lower_node = new HNode(b_upper_back_node,num_vertices,v_b_upper_lower,v_colors_grey,v_normals,sizeof(v_b_upper_left),sizeof(v_colors),sizeof(v_normals), "None");
+  b_upper_lower_node = new HNode(b_upper_back_node,num_vertices,v_b_upper_front,v_colors_red,v_normals,sizeof(v_b_upper_left),sizeof(v_colors),sizeof(v_normals), "None");
+
   camera_pointer_node->change_parameters(0.0, 12.0, -12.0, 0.0, 0.0, 0.0);
 
-  root_node = curr_node = camera_pointer_node;
+  root_node = curr_node = b_lower_back_node;
 
 }
 

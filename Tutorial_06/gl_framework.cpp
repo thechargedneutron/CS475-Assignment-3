@@ -110,9 +110,9 @@ namespace csX75
     move_pointer[0] = ans[0]/a;
     move_pointer[1] = ans[1]/a;
     move_pointer[2] = ans[2]/a;
-    bezier_x.append(move_pointer[0]);
-    bezier_y.append(move_pointer[1]);
-    bezier_z.append(move_pointer[2]);
+    bezier_x.push_back(move_pointer[0]);
+    bezier_y.push_back(move_pointer[1]);
+    bezier_z.push_back(move_pointer[2]);
     mouse_clicked=true;
 
   }
